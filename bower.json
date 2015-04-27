@@ -1,0 +1,20 @@
+{
+  "name": "programming_club",
+  "version": "0.0.0",
+  "homepage": "https://github.com/legomaniack/programming_club",
+  "authors": [
+    "Nolan Groves <dev@triploxgaming.com>"
+  ],
+  "description": "Website for WWHS programming club",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5"
+  }
+}
