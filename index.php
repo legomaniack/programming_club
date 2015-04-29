@@ -19,27 +19,33 @@
 	<link rel="import"
 	  href="bower_components/core-drawer-panel/core-drawer-panel.html">
 	<link rel="import"
+	  href="bower_components/core-icons/core-icons.html">
+	<link rel="import"
+	  href="bower_components/core-icon-button/core-icon-button.html">
+	<link rel="import"
 	  href="bower_components/paper-tabs/paper-tabs.html">
 	  
 	<style>
 		html,body {
 			height: 100%;
 			margin: 0;
-			background-color: #E5E5E5;
+			background-color: #EEEEEE;
 			font-family: 'RobotoDraft', sans-serif;
 		}
 		core-toolbar {
 		  background: #03a9f4;
 		  color: white;
 		}
+		.app-drawer{
+			background: #FAFAFA;
+		}
 	</style>
 	
 </head>
 
 <body unresolved>
-
-	<core-drawer-panel>
-		<core-header-panel drawer>
+	<core-drawer-panel forceNarrow>
+		<core-header-panel drawer class="app-drawer">
 			<core-toolbar></core-toolbar>
 			<div> Drawer content... </div>
 		</core-header-panel>
