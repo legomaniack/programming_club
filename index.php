@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>unquote</title>
+	<title>Westwood Programming Club</title>
 
 	<meta name="viewport" 
 	content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -12,24 +12,47 @@
 	</script>
 
 	<link rel="import" href="bower_components/font-roboto/roboto.html">
-	<link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="import"
+	  href="bower_components/core-header-panel/core-header-panel.html">
+	<link rel="import"
+	  href="bower_components/core-toolbar/core-toolbar.html">
+	<link rel="import"
+	  href="bower_components/core-drawer-panel/core-drawer-panel.html">
+	<link rel="import"
+	  href="bower_components/paper-tabs/paper-tabs.html">
+	  
+	<style>
+		html,body {
+			height: 100%;
+			margin: 0;
+			background-color: #E5E5E5;
+			font-family: 'RobotoDraft', sans-serif;
+		}
+		core-toolbar {
+		  background: #03a9f4;
+		  color: white;
+		}
+	</style>
 	
 </head>
 
 <body unresolved>
 
-	<core-header-panel>
-
-		<core-toolbar>
-			<paper-tabs id="tabs" selected="all" self-end>
-				<paper-tab name="all">All</paper-tab>
-				<paper-tab name="favorites">Favorites</paper-tab>
-			</paper-tabs>
-		</core-toolbar>
-
-		<!-- main page content will go here -->
-
-	</core-header-panel>
+	<core-drawer-panel>
+		<core-header-panel drawer>
+			<core-toolbar></core-toolbar>
+			<div> Drawer content... </div>
+		</core-header-panel>
+		<core-header-panel main>
+			<core-toolbar>
+				<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+				<div>Title</div>
+			</core-toolbar>
+			<div> 
+				Content
+			</div>
+		</core-header-panel>
+	</core-drawer-panel>
 	<script>
 		var tabs = document.querySelector('paper-tabs');
 
