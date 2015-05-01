@@ -21,10 +21,11 @@
 	<link rel="import"
 	  href="bower_components/core-icons/core-icons.html">
 	<link rel="import"
-	  href="bower_components/core-icon-button/core-icon-button.html">
-	<link rel="import"
-	  href="bower_components/paper-tabs/paper-tabs.html">
+	  href="bower_components/paper-icon-button/paper-icon-button.html">
 	  
+	<link rel="import"
+	  href="components/content-card.html">
+	
 	<style>
 		html,body {
 			height: 100%;
@@ -32,12 +33,27 @@
 			background-color: #EEEEEE;
 			font-family: 'RobotoDraft', sans-serif;
 		}
+		core-header-panel {
+			height: 100%;
+			overflow: auto;
+			-webkit-overflow-scrolling: touch; 
+		}
 		core-toolbar {
 		  background: #03a9f4;
 		  color: white;
 		}
 		.app-drawer{
 			background: #FAFAFA;
+		}
+		.content {
+			width: 80%;
+			margin: 50px auto;
+		}
+		
+		@media (min-width: 481px) {
+			.content {
+				width: 500px;
+			}
 		}
 	</style>
 	
@@ -51,20 +67,25 @@
 		</core-header-panel>
 		<core-header-panel main>
 			<core-toolbar>
-				<core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+				<paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
 				<div>Title</div>
 			</core-toolbar>
-			<div> 
-				Content
+			<div class="content" layout vertical center> 
+				<content-card 
+					img="https://placekitten.com/g/600/500">
+					<h2>This is a card with a cat</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing
+					elit, sed do eiusmod tempor incididunt ut labore et
+					dolore magna aliqua. Ut enim ad minim veniam, quis 
+					nostrud exercitation ullamco laboris nisi ut aliquip 
+					ex ea commodo consequat.
+					</p>
+				</content-card>
 			</div>
 		</core-header-panel>
 	</core-drawer-panel>
 	<script>
-		var tabs = document.querySelector('paper-tabs');
-
-		tabs.addEventListener('core-select', function() {
-		console.log("Selected: " + tabs.selected);
-		});
+		
 	</script>
 </body>
 
