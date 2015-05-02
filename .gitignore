@@ -1,3 +1,8 @@
+# Sensitive data
+.htaccess
+*.conf
+*.ini
+
 # Logs
 logs
 *.log
