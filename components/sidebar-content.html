@@ -1,0 +1,68 @@
+<link rel="import"
+  href="../bower_components/polymer/polymer.html">
+<link rel="import"
+  href="../bower_components/core-menu/core-menu.html">
+<link rel="import"
+  href="../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import"
+  href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import"
+  href="../bower_components/core-menu/core-menu.html">
+<link rel="import"
+  href="../bower_components/paper-item/paper-item.html">
+  
+<polymer-element name="sidebar-content" attributes="pageId">
+	<template>
+		<style>
+			:host {
+				background: #FAFAFA;
+				padding: 0;
+				margin: 0;
+			}
+			core-header-panel {
+				height: 100%;
+				overflow: auto;
+				-webkit-overflow-scrolling: touch; 
+			}
+			core-toolbar {
+				background: #FF9800;
+				color: white;
+			}
+			paper-item {
+				padding: 0;
+			}
+			a {
+				text-decoration: none;
+				color: black;
+				padding: 0;
+			}
+			.core-selected div{
+				color: #448AFF;
+			}
+		</style>
+		<core-header-panel>
+			<core-toolbar>
+				<div>Navigation</div>
+			</core-toolbar>
+			<core-menu selected={{pageId}}>
+				<template repeat="{{ page in pages}}">
+					<a href={{page.url}} >
+						<paper-item noink>
+							<div layout horizontal center>{{page.title}}</div>
+						</paper-item>
+					</a>
+					
+				</template>
+			</core-menu>
+		</core-header-panel>
+	</template>
+	<script>
+		Polymer({
+			pageId:"0",
+			pages: [
+				{title: "Home", url: "index.html"},
+				{title: "Projects", url: "projects.html"}
+			]
+		});
+	</script>
+</polymer-element>
