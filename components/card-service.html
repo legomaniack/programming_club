@@ -1,0 +1,62 @@
+<link rel="import" 
+  href="../bower_components/polymer/polymer.html">
+<link rel="import" 
+  href="../bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="card-service" attributes="type cols colNum">
+	<template>
+		<style>
+			:host {
+				display: none;
+			}
+		</style>
+		<!--<core-ajax
+		  url=""
+		  on-core-response="{{cardsLoaded}}"
+		  handleAs="json">
+		</core-ajax>-->
+	</template>
+	<script>
+		Polymer({
+			cards: [
+					{'title': "Space Cat 1",
+					'img': "",
+					'content': "We choose to go to the moon"},
+					{'title': "Space Cat 2",
+					'img': "https://placekitten.com/g/600/500",
+					'content': "We choose to go to the moon because we wanted to and because of reasons that shall not be disclosed to the public"},
+					{'title': "3 Cat",
+					'img': "https://placekitten.com/g/600/500",
+					'content': "We choose to go to the moon"},
+					{'title': "Space Cat 4",
+					'img': "",
+					'content': "We choose to go to the moon"},
+					{'title': "Space 5",
+					'img': "https://placekitten.com/g/600/500",
+					'content': "We choose to go to the moon"},
+					{'title': "Space 6 Cat",
+					'img': "https://placekitten.com/g/600/500",
+					'content': "We choose to go to the moon"}
+			],
+			colNum: 1,
+			type: "projects",
+			cols: [],
+			ready: function () {
+				this.cardsLoaded();
+			},
+			colNumChanged: function() { //Recalculate columns on change
+				this.cardsLoaded(); 
+			},
+			cardsLoaded: function() { //Calculate columns
+				cols = []
+				for (var i=0; i < this.colNum; i++) {
+					cols.push([]);
+				}
+				for (var i=0; i < this.cards.length; i++) {
+					cols[i % this.colNum].push(this.cards[i]);
+				}
+				this.cols = cols;
+			}
+		});
+	</script>
+</polymer-element>

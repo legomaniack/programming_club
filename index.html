@@ -13,17 +13,26 @@
 	  href="components/website-layout.html">
 	<link rel="import"
 	  href="components/content-card.html">
+	
+	<style>
+		.content {
+			padding: 30px;
+		}
+	</style>
+	  
 </head>
 
 <body unresolved>
 	<website-layout pageTitle="Home" pageId="0">
-		<content-card>
-			<h2>Content</h2>
-			<p>Eventually, some content will actually
-			be on this page, and it will not just be this random
-			filler text.
-			</p>
-		</content-card>
+		<div class="content" layout>
+			<content-card>
+				<h2>Content</h2>
+				<p>Eventually, some content will actually
+				be on this page, and it will not just be this random
+				filler text.
+				</p>
+			</content-card>
+		</div>
 	</website-layout>
 	<script></script>
 </body>
