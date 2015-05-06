@@ -9,7 +9,7 @@
 	} else {
 		$type = $_GET["type"];
 	}
-	$accepted_values = array("projects","ideas")
+	$accepted_values = array("projects","ideas");
 	if (!in_array($type, $accepted_values) $type = "projects";
 	
 	$result = $mysqli->query("SELECT * FROM ."$type) or die($mysqli->error);
