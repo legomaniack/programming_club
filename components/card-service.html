@@ -2,6 +2,7 @@
   href="../bower_components/polymer/polymer.html">
 <link rel="import" 
   href="../bower_components/core-ajax/core-ajax.html">
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
 
 <polymer-element name="card-service" attributes="type cols colNum">
 	<template>
@@ -10,11 +11,12 @@
 				display: none;
 			}
 		</style>
-		<!--<core-ajax
-		  url=""
-		  on-core-response="{{cardsLoaded}}"
-		  handleAs="json">
-		</core-ajax>-->
+		<core-ajax id="ajax"
+			auto
+			url="../php/getData.php?type={{type}}"
+			on-core-response="{{cardsLoaded}}"
+			handleAs="json">
+		</core-ajax>
 	</template>
 	<script>
 		Polymer({
@@ -42,12 +44,16 @@
 			type: "projects",
 			cols: [],
 			ready: function () {
-				this.cardsLoaded();
+				this.calculateColumns();
 			},
 			colNumChanged: function() { //Recalculate columns on change
-				this.cardsLoaded(); 
+				this.calculateColumns(); 
 			},
-			cardsLoaded: function() { //Calculate columns
+			cardsLoaded: function() {
+				this.cards = this.$.ajax.response.slice(0);
+				this.calculateColumns();
+			},
+			calculateColumns : function() {
 				cols = []
 				for (var i=0; i < this.colNum; i++) {
 					cols.push([]);
