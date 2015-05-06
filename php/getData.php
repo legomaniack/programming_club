@@ -15,7 +15,7 @@
 	}
 	$result = $mysqli->query("SELECT * FROM ".$type) or die($mysqli->error);
 	
-	while($row=$mysqli->fetch_assoc($result)) {
+	while($row=$result->fetch_assoc()) {
 		$output[]=$row;
 	}
     print(json_encode($output));
