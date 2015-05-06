@@ -15,6 +15,7 @@
 	}
 	$result = $mysqli->query("SELECT * FROM ".$type) or die($mysqli->error);
 	
+	$output = array();
 	while($row=$result->fetch_assoc()) {
 		$output[]=$row;
 	}
