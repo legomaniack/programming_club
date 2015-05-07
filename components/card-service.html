@@ -13,7 +13,7 @@
 		</style>
 		<core-ajax id="ajax"
 			auto
-			url="../php/getData.php?type={{type}}"
+			url="./php/getData.php?type={{type}}"
 			on-core-response="{{cardsLoaded}}"
 			handleAs="json">
 		</core-ajax>
@@ -51,6 +51,7 @@
 			},
 			cardsLoaded: function() {
 				this.cards = this.$.ajax.response.slice(0);
+				console.log(this.$.ajax.response.slice(0));
 				this.calculateColumns();
 			},
 			calculateColumns : function() {
