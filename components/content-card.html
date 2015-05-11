@@ -7,7 +7,7 @@
 <link rel="import"
   href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<polymer-element name="content-card" attributes="img">
+<polymer-element name="content-card" attributes="img postId">
 	<template>
 		<style>
 			:host {
@@ -49,6 +49,7 @@
 			}
 			
 		</style>
+		<core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
 		<paper-shadow z="1" id="card-shadow">
 			<div class="card-content" vertical layout start-justified>
 				<content select="h2"></content>
@@ -61,10 +62,10 @@
 				</div>
 			</div>
 		</paper-shadow>
-		
 	</template>
 	<script>
 		Polymer({
+			postId: 0,
 			img: ""
 		});
 	</script>

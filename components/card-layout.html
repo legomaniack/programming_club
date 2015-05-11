@@ -14,7 +14,6 @@
 			}
 			.content {
 				width: 100%;
-				 
 			}
 			.column {
 				padding: {{columnPadding}}px;
@@ -33,7 +32,8 @@
 				<div layout vertical flex class="column">
 				<template repeat="{{card in col}}">
 					<content-card
-					img={{card.img}}>
+					img={{card.img}}
+					postId={{card.id}}>
 						<h2>{{card.title}}</h2>
 						<p>{{card.text}}</p>
 					</content-card>
@@ -49,12 +49,15 @@
 			type: "projects",
 			ready: function () {
 				this.columns = Math.max(1,Math.floor(this.clientWidth/(this.columnWidth +(2 * this.columnPadding))));
+				element.setAttribute('unresolved', '');
 				layout = this;
 				window.addEventListener('resize', function () {
 					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
 				});
 				window.addEventListener("polymer-ready", function() { //Ensure that columns are calculated
 					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
+					layout.setAttribute('resolved', '');
+					layout.removeAttribute('unresolved');
 				});
 			}
 		});

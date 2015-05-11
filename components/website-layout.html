@@ -11,6 +11,8 @@
   href="../bower_components/core-icons/core-icons.html">
 <link rel="import"
   href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import"
+  href="../bower_components/google-signin/google-signin.html">
   
 <link rel="import"
   href="../components/sidebar-content.html">
@@ -43,6 +45,8 @@
 				<core-toolbar>
 					<paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
 					<div>{{pageTitle}}</div>
+					<google-signin clientId="351051375906-sjdenp8semduahev9m4q8v2quka5rrco.apps.googleusercontent.com" 
+					  layout self-end-justify></google-signin>
 				</core-toolbar>
 				<div class="content">
 					<content></content>
@@ -55,5 +59,20 @@
 			pageId: 0,
 			pageTitle: "Home"
 		});
+		
+		function signinCallback(authResult) {
+		  if (authResult['status']['signed_in']) {
+			// Update the app to reflect a signed in user
+			// Hide the sign-in button now that the user is authorized, for example:
+			document.getElementById('signinButton').setAttribute('style', 'display: none');
+		  } else {
+			// Update the app to reflect a signed out user
+			// Possible error values:
+			//   "user_signed_out" - User is signed-out
+			//   "access_denied" - User denied access to your app
+			//   "immediate_failed" - Could not automatically log in the user
+			console.log('Sign-in state: ' + authResult['error']);
+		  }
+		}
 	</script>
 </polymer-element>
