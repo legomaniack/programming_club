@@ -17,7 +17,7 @@
 <link rel="import"
   href="../components/sidebar-content.html">
 
-<polymer-element name="website-layout" attributes="pageTitle pageId">
+<polymer-element name="website-layout" attributes="pageTitle pageId color">
 	<template>
 		<style>
 			:host{
@@ -27,7 +27,7 @@
 			}
 			core-header-panel {
 				height: 100%;
-				background: #EEEEEE;
+				background: {{color}};
 				overflow: auto;
 				-webkit-overflow-scrolling: touch; 
 			}
@@ -44,7 +44,7 @@
 			<core-header-panel main>
 				<core-toolbar>
 					<paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
-					<div>{{pageTitle}}</div>
+					<span flex>{{pageTitle}}</span>
 					<google-signin clientId="351051375906-sjdenp8semduahev9m4q8v2quka5rrco.apps.googleusercontent.com" 
 					  layout self-end-justify></google-signin>
 				</core-toolbar>
@@ -57,7 +57,8 @@
 	<script>
 		Polymer({
 			pageId: 0,
-			pageTitle: "Home"
+			pageTitle: "Home",
+			color: "#EEEEEE"
 		});
 		
 		function signinCallback(authResult) {
