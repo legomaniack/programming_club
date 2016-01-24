@@ -1,0 +1,25 @@
+<link rel="import"
+  href="../bower_components/polymer/polymer.html">
+  
+<polymer-element name="text-layout" attributes="type">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+			.content {
+				width: 100%;
+				padding: 64px 128px 64px 128px;
+			}
+		</style>
+		
+		<div class="content" layout start around-justified vertical> 
+			<content></content>
+		</div>
+	</template>
+	<script>
+		Polymer('text-layout', {
+			ready: function () {}
+		});
+	</script>
+</polymer-element>
