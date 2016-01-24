@@ -1,0 +1,65 @@
+<link rel="import"
+  href="../bower_components/polymer/polymer.html">
+  
+<link rel="import"
+  href="../components/content-card.html">
+<link rel="import"
+  href="../components/card-service.html">
+  
+<polymer-element name="card-layout" attributes="type">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+			.content {
+				width: 100%;
+			}
+			.column {
+				padding: {{columnPadding}}px;
+				max-width: {{columnWidth}}px;
+			}
+			content-card {
+				margin-bottom: 20px;
+				width: 100%;
+			}
+		</style>
+		
+		<card-service id="service" type="{{type}}" cols="{{cols}}" colNum="{{columns}}"></card-service>
+		
+		<div class="content" layout start around-justified horizontal> 
+			<template repeat="{{col in cols}}">
+				<div layout vertical flex class="column">
+				<template repeat="{{card in col}}">
+					<content-card
+					img={{card.img}}
+					postId={{card.id}}>
+						<h2>{{card.title}}</h2>
+						<p>{{card.text}}</p>
+					</content-card>
+				</template>
+				</div>
+			</template>
+		</div>
+	</template>
+	<script>
+		Polymer('card-layout', {
+			columnWidth: 450,
+			columnPadding: 30,
+			type: "projects",
+			ready: function () {
+				this.columns = Math.max(1,Math.floor(this.clientWidth/(this.columnWidth +(2 * this.columnPadding))));
+				this.setAttribute('unresolved', '');
+				layout = this;
+				window.addEventListener('resize', function () {
+					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
+				});
+				window.addEventListener("polymer-ready", function() { //Ensure that columns are calculated
+					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
+					layout.setAttribute('resolved', '');
+					layout.removeAttribute('unresolved');
+				});
+			}
+		});
+	</script>
+</polymer-element>

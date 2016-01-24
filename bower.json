@@ -1,12 +1,14 @@
 {
   "name": "programming_club",
-  "version": "0.0.0",
   "homepage": "https://github.com/legomaniack/programming_club",
   "authors": [
-    "Nolan Groves <dev@triploxgaming.com>"
+    "legomaniack <ng31415@gmail.com>"
   ],
-  "description": "Website for WWHS programming club",
+  "description": "Website for the WWHS Programming Club",
+  "main": "index.html",
+  "moduleType": [],
   "license": "MIT",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,13 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.5",
-    "core-elements": "Polymer/core-elements#~0.5.5",
-    "paper-elements": "Polymer/paper-elements#~0.5.5",
-    "core-ajax": "Polymer/core-ajax#^0.5",
-    "google-signin": "GoogleWebComponents/google-signin#~0.3.0"
-  },
-  "resolutions": {
-    "webcomponentsjs": "0.7.20"
+    "polymer": "Polymer/polymer#^1.2.0"
   }
 }
