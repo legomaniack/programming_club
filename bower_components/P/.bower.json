@@ -1,0 +1,34 @@
+{
+  "name": "P",
+  "homepage": "https://github.com/EvandroLG/P",
+  "authors": [
+    "evandrolg"
+  ],
+  "description": "It's an agnostic, cross-browser and very lightweight library to help you to work with Promise in JavaScript.",
+  "main": "src/p.min.js",
+  "keywords": [
+    "js",
+    "promise",
+    "callback",
+    "library",
+    "functional"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "feb00f2383",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "feb00f2383cd62386521215dbc5ae2da45b03c8e"
+  },
+  "_source": "git://github.com/EvandroLG/P.git",
+  "_target": "*",
+  "_originalSource": "P",
+  "_direct": true
+}
