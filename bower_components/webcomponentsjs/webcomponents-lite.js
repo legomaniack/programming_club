@@ -8,16 +8,14 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 // @version 0.7.20
-(function() {
-  window.WebComponents = window.WebComponents || {
-    flags: {}
-  };
-  var file = "webcomponents-lite.js";
-  var script = document.querySelector('script[src*="' + file + '"]');
+(function () {
+  window.WebComponents = window.WebComponents || { flags: {} };
+  var file = 'webcomponents-lite.js';
+  var script = Polymer.dom(document).querySelector('script[src*="' + file + '"]');
   var flags = {};
   if (!flags.noOpts) {
-    location.search.slice(1).split("&").forEach(function(option) {
-      var parts = option.split("=");
+    location.search.slice(1).split('&').forEach(function (option) {
+      var parts = option.split('=');
       var match;
       if (parts[0] && (match = parts[0].match(/wc-(.+)/))) {
         flags[match[1]] = parts[1] || true;
@@ -25,15 +23,15 @@
     });
     if (script) {
       for (var i = 0, a; a = script.attributes[i]; i++) {
-        if (a.name !== "src") {
+        if (a.name !== 'src') {
           flags[a.name] = a.value || true;
         }
       }
     }
     if (flags.log && flags.log.split) {
-      var parts = flags.log.split(",");
+      var parts = flags.log.split(',');
       flags.log = {};
-      parts.forEach(function(f) {
+      parts.forEach(function (f) {
         flags.log[f] = true;
       });
     } else {
@@ -41,38 +39,37 @@
     }
   }
   if (flags.register) {
-    window.CustomElements = window.CustomElements || {
-      flags: {}
-    };
+    window.CustomElements = window.CustomElements || { flags: {} };
     window.CustomElements.flags.register = flags.register;
   }
   WebComponents.flags = flags;
-})();
-
-(function(scope) {
-  "use strict";
+}());
+(function (scope) {
+  'use strict';
   var hasWorkingUrl = false;
   if (!scope.forceJURL) {
     try {
-      var u = new URL("b", "http://a");
-      u.pathname = "c%20d";
-      hasWorkingUrl = u.href === "http://a/c%20d";
-    } catch (e) {}
+      var u = new URL('b', 'http://a');
+      u.pathname = 'c%20d';
+      hasWorkingUrl = u.href === 'http://a/c%20d';
+    } catch (e) {
+    }
   }
-  if (hasWorkingUrl) return;
+  if (hasWorkingUrl)
+    return;
   var relative = Object.create(null);
-  relative["ftp"] = 21;
-  relative["file"] = 0;
-  relative["gopher"] = 70;
-  relative["http"] = 80;
-  relative["https"] = 443;
-  relative["ws"] = 80;
-  relative["wss"] = 443;
+  relative['ftp'] = 21;
+  relative['file'] = 0;
+  relative['gopher'] = 70;
+  relative['http'] = 80;
+  relative['https'] = 443;
+  relative['ws'] = 80;
+  relative['wss'] = 443;
   var relativePathDotMapping = Object.create(null);
-  relativePathDotMapping["%2e"] = ".";
-  relativePathDotMapping[".%2e"] = "..";
-  relativePathDotMapping["%2e."] = "..";
-  relativePathDotMapping["%2e%2e"] = "..";
+  relativePathDotMapping['%2e'] = '.';
+  relativePathDotMapping['.%2e'] = '..';
+  relativePathDotMapping['%2e.'] = '..';
+  relativePathDotMapping['%2e%2e'] = '..';
   function isRelativeScheme(scheme) {
     return relative[scheme] !== undefined;
   }
@@ -81,21 +78,34 @@
     this._isInvalid = true;
   }
   function IDNAToASCII(h) {
-    if ("" == h) {
+    if ('' == h) {
       invalid.call(this);
     }
     return h.toLowerCase();
   }
   function percentEscape(c) {
     var unicode = c.charCodeAt(0);
-    if (unicode > 32 && unicode < 127 && [ 34, 35, 60, 62, 63, 96 ].indexOf(unicode) == -1) {
+    if (unicode > 32 && unicode < 127 && [
+        34,
+        35,
+        60,
+        62,
+        63,
+        96
+      ].indexOf(unicode) == -1) {
       return c;
     }
     return encodeURIComponent(c);
   }
   function percentEscapeQuery(c) {
     var unicode = c.charCodeAt(0);
-    if (unicode > 32 && unicode < 127 && [ 34, 35, 60, 62, 96 ].indexOf(unicode) == -1) {
+    if (unicode > 32 && unicode < 127 && [
+        34,
+        35,
+        60,
+        62,
+        96
+      ].indexOf(unicode) == -1) {
       return c;
     }
     return encodeURIComponent(c);
@@ -105,509 +115,513 @@
     function err(message) {
       errors.push(message);
     }
-    var state = stateOverride || "scheme start", cursor = 0, buffer = "", seenAt = false, seenBracket = false, errors = [];
-    loop: while ((input[cursor - 1] != EOF || cursor == 0) && !this._isInvalid) {
-      var c = input[cursor];
-      switch (state) {
-       case "scheme start":
-        if (c && ALPHA.test(c)) {
-          buffer += c.toLowerCase();
-          state = "scheme";
-        } else if (!stateOverride) {
-          buffer = "";
-          state = "no scheme";
-          continue;
-        } else {
-          err("Invalid scheme.");
-          break loop;
-        }
-        break;
-
-       case "scheme":
-        if (c && ALPHANUMERIC.test(c)) {
-          buffer += c.toLowerCase();
-        } else if (":" == c) {
-          this._scheme = buffer;
-          buffer = "";
-          if (stateOverride) {
+    var state = stateOverride || 'scheme start', cursor = 0, buffer = '', seenAt = false, seenBracket = false, errors = [];
+    loop:
+      while ((input[cursor - 1] != EOF || cursor == 0) && !this._isInvalid) {
+        var c = input[cursor];
+        switch (state) {
+        case 'scheme start':
+          if (c && ALPHA.test(c)) {
+            buffer += c.toLowerCase();
+            state = 'scheme';
+          } else if (!stateOverride) {
+            buffer = '';
+            state = 'no scheme';
+            continue;
+          } else {
+            err('Invalid scheme.');
             break loop;
           }
-          if (isRelativeScheme(this._scheme)) {
-            this._isRelative = true;
-          }
-          if ("file" == this._scheme) {
-            state = "relative";
-          } else if (this._isRelative && base && base._scheme == this._scheme) {
-            state = "relative or authority";
-          } else if (this._isRelative) {
-            state = "authority first slash";
+          break;
+        case 'scheme':
+          if (c && ALPHANUMERIC.test(c)) {
+            buffer += c.toLowerCase();
+          } else if (':' == c) {
+            this._scheme = buffer;
+            buffer = '';
+            if (stateOverride) {
+              break loop;
+            }
+            if (isRelativeScheme(this._scheme)) {
+              this._isRelative = true;
+            }
+            if ('file' == this._scheme) {
+              state = 'relative';
+            } else if (this._isRelative && base && base._scheme == this._scheme) {
+              state = 'relative or authority';
+            } else if (this._isRelative) {
+              state = 'authority first slash';
+            } else {
+              state = 'scheme data';
+            }
+          } else if (!stateOverride) {
+            buffer = '';
+            cursor = 0;
+            state = 'no scheme';
+            continue;
+          } else if (EOF == c) {
+            break loop;
           } else {
-            state = "scheme data";
+            err('Code point not allowed in scheme: ' + c);
+            break loop;
           }
-        } else if (!stateOverride) {
-          buffer = "";
-          cursor = 0;
-          state = "no scheme";
-          continue;
-        } else if (EOF == c) {
-          break loop;
-        } else {
-          err("Code point not allowed in scheme: " + c);
-          break loop;
-        }
-        break;
-
-       case "scheme data":
-        if ("?" == c) {
-          this._query = "?";
-          state = "query";
-        } else if ("#" == c) {
-          this._fragment = "#";
-          state = "fragment";
-        } else {
-          if (EOF != c && "	" != c && "\n" != c && "\r" != c) {
-            this._schemeData += percentEscape(c);
+          break;
+        case 'scheme data':
+          if ('?' == c) {
+            this._query = '?';
+            state = 'query';
+          } else if ('#' == c) {
+            this._fragment = '#';
+            state = 'fragment';
+          } else {
+            if (EOF != c && '\t' != c && '\n' != c && '\r' != c) {
+              this._schemeData += percentEscape(c);
+            }
           }
-        }
-        break;
-
-       case "no scheme":
-        if (!base || !isRelativeScheme(base._scheme)) {
-          err("Missing scheme.");
-          invalid.call(this);
-        } else {
-          state = "relative";
-          continue;
-        }
-        break;
-
-       case "relative or authority":
-        if ("/" == c && "/" == input[cursor + 1]) {
-          state = "authority ignore slashes";
-        } else {
-          err("Expected /, got: " + c);
-          state = "relative";
-          continue;
-        }
-        break;
-
-       case "relative":
-        this._isRelative = true;
-        if ("file" != this._scheme) this._scheme = base._scheme;
-        if (EOF == c) {
-          this._host = base._host;
-          this._port = base._port;
-          this._path = base._path.slice();
-          this._query = base._query;
-          this._username = base._username;
-          this._password = base._password;
-          break loop;
-        } else if ("/" == c || "\\" == c) {
-          if ("\\" == c) err("\\ is an invalid code point.");
-          state = "relative slash";
-        } else if ("?" == c) {
-          this._host = base._host;
-          this._port = base._port;
-          this._path = base._path.slice();
-          this._query = "?";
-          this._username = base._username;
-          this._password = base._password;
-          state = "query";
-        } else if ("#" == c) {
-          this._host = base._host;
-          this._port = base._port;
-          this._path = base._path.slice();
-          this._query = base._query;
-          this._fragment = "#";
-          this._username = base._username;
-          this._password = base._password;
-          state = "fragment";
-        } else {
-          var nextC = input[cursor + 1];
-          var nextNextC = input[cursor + 2];
-          if ("file" != this._scheme || !ALPHA.test(c) || nextC != ":" && nextC != "|" || EOF != nextNextC && "/" != nextNextC && "\\" != nextNextC && "?" != nextNextC && "#" != nextNextC) {
+          break;
+        case 'no scheme':
+          if (!base || !isRelativeScheme(base._scheme)) {
+            err('Missing scheme.');
+            invalid.call(this);
+          } else {
+            state = 'relative';
+            continue;
+          }
+          break;
+        case 'relative or authority':
+          if ('/' == c && '/' == input[cursor + 1]) {
+            state = 'authority ignore slashes';
+          } else {
+            err('Expected /, got: ' + c);
+            state = 'relative';
+            continue;
+          }
+          break;
+        case 'relative':
+          this._isRelative = true;
+          if ('file' != this._scheme)
+            this._scheme = base._scheme;
+          if (EOF == c) {
             this._host = base._host;
             this._port = base._port;
-            this._username = base._username;
-            this._password = base._password;
             this._path = base._path.slice();
-            this._path.pop();
-          }
-          state = "relative path";
-          continue;
-        }
-        break;
-
-       case "relative slash":
-        if ("/" == c || "\\" == c) {
-          if ("\\" == c) {
-            err("\\ is an invalid code point.");
-          }
-          if ("file" == this._scheme) {
-            state = "file host";
-          } else {
-            state = "authority ignore slashes";
-          }
-        } else {
-          if ("file" != this._scheme) {
-            this._host = base._host;
-            this._port = base._port;
+            this._query = base._query;
             this._username = base._username;
             this._password = base._password;
-          }
-          state = "relative path";
-          continue;
-        }
-        break;
-
-       case "authority first slash":
-        if ("/" == c) {
-          state = "authority second slash";
-        } else {
-          err("Expected '/', got: " + c);
-          state = "authority ignore slashes";
-          continue;
-        }
-        break;
-
-       case "authority second slash":
-        state = "authority ignore slashes";
-        if ("/" != c) {
-          err("Expected '/', got: " + c);
-          continue;
-        }
-        break;
-
-       case "authority ignore slashes":
-        if ("/" != c && "\\" != c) {
-          state = "authority";
-          continue;
-        } else {
-          err("Expected authority, got: " + c);
-        }
-        break;
-
-       case "authority":
-        if ("@" == c) {
-          if (seenAt) {
-            err("@ already seen.");
-            buffer += "%40";
-          }
-          seenAt = true;
-          for (var i = 0; i < buffer.length; i++) {
-            var cp = buffer[i];
-            if ("	" == cp || "\n" == cp || "\r" == cp) {
-              err("Invalid whitespace in authority.");
-              continue;
-            }
-            if (":" == cp && null === this._password) {
-              this._password = "";
-              continue;
-            }
-            var tempC = percentEscape(cp);
-            null !== this._password ? this._password += tempC : this._username += tempC;
-          }
-          buffer = "";
-        } else if (EOF == c || "/" == c || "\\" == c || "?" == c || "#" == c) {
-          cursor -= buffer.length;
-          buffer = "";
-          state = "host";
-          continue;
-        } else {
-          buffer += c;
-        }
-        break;
-
-       case "file host":
-        if (EOF == c || "/" == c || "\\" == c || "?" == c || "#" == c) {
-          if (buffer.length == 2 && ALPHA.test(buffer[0]) && (buffer[1] == ":" || buffer[1] == "|")) {
-            state = "relative path";
-          } else if (buffer.length == 0) {
-            state = "relative path start";
+            break loop;
+          } else if ('/' == c || '\\' == c) {
+            if ('\\' == c)
+              err('\\ is an invalid code point.');
+            state = 'relative slash';
+          } else if ('?' == c) {
+            this._host = base._host;
+            this._port = base._port;
+            this._path = base._path.slice();
+            this._query = '?';
+            this._username = base._username;
+            this._password = base._password;
+            state = 'query';
+          } else if ('#' == c) {
+            this._host = base._host;
+            this._port = base._port;
+            this._path = base._path.slice();
+            this._query = base._query;
+            this._fragment = '#';
+            this._username = base._username;
+            this._password = base._password;
+            state = 'fragment';
           } else {
+            var nextC = input[cursor + 1];
+            var nextNextC = input[cursor + 2];
+            if ('file' != this._scheme || !ALPHA.test(c) || nextC != ':' && nextC != '|' || EOF != nextNextC && '/' != nextNextC && '\\' != nextNextC && '?' != nextNextC && '#' != nextNextC) {
+              this._host = base._host;
+              this._port = base._port;
+              this._username = base._username;
+              this._password = base._password;
+              this._path = base._path.slice();
+              this._path.pop();
+            }
+            state = 'relative path';
+            continue;
+          }
+          break;
+        case 'relative slash':
+          if ('/' == c || '\\' == c) {
+            if ('\\' == c) {
+              err('\\ is an invalid code point.');
+            }
+            if ('file' == this._scheme) {
+              state = 'file host';
+            } else {
+              state = 'authority ignore slashes';
+            }
+          } else {
+            if ('file' != this._scheme) {
+              this._host = base._host;
+              this._port = base._port;
+              this._username = base._username;
+              this._password = base._password;
+            }
+            state = 'relative path';
+            continue;
+          }
+          break;
+        case 'authority first slash':
+          if ('/' == c) {
+            state = 'authority second slash';
+          } else {
+            err('Expected \'/\', got: ' + c);
+            state = 'authority ignore slashes';
+            continue;
+          }
+          break;
+        case 'authority second slash':
+          state = 'authority ignore slashes';
+          if ('/' != c) {
+            err('Expected \'/\', got: ' + c);
+            continue;
+          }
+          break;
+        case 'authority ignore slashes':
+          if ('/' != c && '\\' != c) {
+            state = 'authority';
+            continue;
+          } else {
+            err('Expected authority, got: ' + c);
+          }
+          break;
+        case 'authority':
+          if ('@' == c) {
+            if (seenAt) {
+              err('@ already seen.');
+              buffer += '%40';
+            }
+            seenAt = true;
+            for (var i = 0; i < buffer.length; i++) {
+              var cp = buffer[i];
+              if ('\t' == cp || '\n' == cp || '\r' == cp) {
+                err('Invalid whitespace in authority.');
+                continue;
+              }
+              if (':' == cp && null === this._password) {
+                this._password = '';
+                continue;
+              }
+              var tempC = percentEscape(cp);
+              null !== this._password ? this._password += tempC : this._username += tempC;
+            }
+            buffer = '';
+          } else if (EOF == c || '/' == c || '\\' == c || '?' == c || '#' == c) {
+            cursor -= buffer.length;
+            buffer = '';
+            state = 'host';
+            continue;
+          } else {
+            buffer += c;
+          }
+          break;
+        case 'file host':
+          if (EOF == c || '/' == c || '\\' == c || '?' == c || '#' == c) {
+            if (buffer.length == 2 && ALPHA.test(buffer[0]) && (buffer[1] == ':' || buffer[1] == '|')) {
+              state = 'relative path';
+            } else if (buffer.length == 0) {
+              state = 'relative path start';
+            } else {
+              this._host = IDNAToASCII.call(this, buffer);
+              buffer = '';
+              state = 'relative path start';
+            }
+            continue;
+          } else if ('\t' == c || '\n' == c || '\r' == c) {
+            err('Invalid whitespace in file host.');
+          } else {
+            buffer += c;
+          }
+          break;
+        case 'host':
+        case 'hostname':
+          if (':' == c && !seenBracket) {
             this._host = IDNAToASCII.call(this, buffer);
-            buffer = "";
-            state = "relative path start";
-          }
-          continue;
-        } else if ("	" == c || "\n" == c || "\r" == c) {
-          err("Invalid whitespace in file host.");
-        } else {
-          buffer += c;
-        }
-        break;
-
-       case "host":
-       case "hostname":
-        if (":" == c && !seenBracket) {
-          this._host = IDNAToASCII.call(this, buffer);
-          buffer = "";
-          state = "port";
-          if ("hostname" == stateOverride) {
-            break loop;
-          }
-        } else if (EOF == c || "/" == c || "\\" == c || "?" == c || "#" == c) {
-          this._host = IDNAToASCII.call(this, buffer);
-          buffer = "";
-          state = "relative path start";
-          if (stateOverride) {
-            break loop;
-          }
-          continue;
-        } else if ("	" != c && "\n" != c && "\r" != c) {
-          if ("[" == c) {
-            seenBracket = true;
-          } else if ("]" == c) {
-            seenBracket = false;
-          }
-          buffer += c;
-        } else {
-          err("Invalid code point in host/hostname: " + c);
-        }
-        break;
-
-       case "port":
-        if (/[0-9]/.test(c)) {
-          buffer += c;
-        } else if (EOF == c || "/" == c || "\\" == c || "?" == c || "#" == c || stateOverride) {
-          if ("" != buffer) {
-            var temp = parseInt(buffer, 10);
-            if (temp != relative[this._scheme]) {
-              this._port = temp + "";
+            buffer = '';
+            state = 'port';
+            if ('hostname' == stateOverride) {
+              break loop;
             }
-            buffer = "";
-          }
-          if (stateOverride) {
-            break loop;
-          }
-          state = "relative path start";
-          continue;
-        } else if ("	" == c || "\n" == c || "\r" == c) {
-          err("Invalid code point in port: " + c);
-        } else {
-          invalid.call(this);
-        }
-        break;
-
-       case "relative path start":
-        if ("\\" == c) err("'\\' not allowed in path.");
-        state = "relative path";
-        if ("/" != c && "\\" != c) {
-          continue;
-        }
-        break;
-
-       case "relative path":
-        if (EOF == c || "/" == c || "\\" == c || !stateOverride && ("?" == c || "#" == c)) {
-          if ("\\" == c) {
-            err("\\ not allowed in relative path.");
-          }
-          var tmp;
-          if (tmp = relativePathDotMapping[buffer.toLowerCase()]) {
-            buffer = tmp;
-          }
-          if (".." == buffer) {
-            this._path.pop();
-            if ("/" != c && "\\" != c) {
-              this._path.push("");
+          } else if (EOF == c || '/' == c || '\\' == c || '?' == c || '#' == c) {
+            this._host = IDNAToASCII.call(this, buffer);
+            buffer = '';
+            state = 'relative path start';
+            if (stateOverride) {
+              break loop;
             }
-          } else if ("." == buffer && "/" != c && "\\" != c) {
-            this._path.push("");
-          } else if ("." != buffer) {
-            if ("file" == this._scheme && this._path.length == 0 && buffer.length == 2 && ALPHA.test(buffer[0]) && buffer[1] == "|") {
-              buffer = buffer[0] + ":";
+            continue;
+          } else if ('\t' != c && '\n' != c && '\r' != c) {
+            if ('[' == c) {
+              seenBracket = true;
+            } else if (']' == c) {
+              seenBracket = false;
             }
-            this._path.push(buffer);
+            buffer += c;
+          } else {
+            err('Invalid code point in host/hostname: ' + c);
           }
-          buffer = "";
-          if ("?" == c) {
-            this._query = "?";
-            state = "query";
-          } else if ("#" == c) {
-            this._fragment = "#";
-            state = "fragment";
+          break;
+        case 'port':
+          if (/[0-9]/.test(c)) {
+            buffer += c;
+          } else if (EOF == c || '/' == c || '\\' == c || '?' == c || '#' == c || stateOverride) {
+            if ('' != buffer) {
+              var temp = parseInt(buffer, 10);
+              if (temp != relative[this._scheme]) {
+                this._port = temp + '';
+              }
+              buffer = '';
+            }
+            if (stateOverride) {
+              break loop;
+            }
+            state = 'relative path start';
+            continue;
+          } else if ('\t' == c || '\n' == c || '\r' == c) {
+            err('Invalid code point in port: ' + c);
+          } else {
+            invalid.call(this);
           }
-        } else if ("	" != c && "\n" != c && "\r" != c) {
-          buffer += percentEscape(c);
+          break;
+        case 'relative path start':
+          if ('\\' == c)
+            err('\'\\\' not allowed in path.');
+          state = 'relative path';
+          if ('/' != c && '\\' != c) {
+            continue;
+          }
+          break;
+        case 'relative path':
+          if (EOF == c || '/' == c || '\\' == c || !stateOverride && ('?' == c || '#' == c)) {
+            if ('\\' == c) {
+              err('\\ not allowed in relative path.');
+            }
+            var tmp;
+            if (tmp = relativePathDotMapping[buffer.toLowerCase()]) {
+              buffer = tmp;
+            }
+            if ('..' == buffer) {
+              this._path.pop();
+              if ('/' != c && '\\' != c) {
+                this._path.push('');
+              }
+            } else if ('.' == buffer && '/' != c && '\\' != c) {
+              this._path.push('');
+            } else if ('.' != buffer) {
+              if ('file' == this._scheme && this._path.length == 0 && buffer.length == 2 && ALPHA.test(buffer[0]) && buffer[1] == '|') {
+                buffer = buffer[0] + ':';
+              }
+              this._path.push(buffer);
+            }
+            buffer = '';
+            if ('?' == c) {
+              this._query = '?';
+              state = 'query';
+            } else if ('#' == c) {
+              this._fragment = '#';
+              state = 'fragment';
+            }
+          } else if ('\t' != c && '\n' != c && '\r' != c) {
+            buffer += percentEscape(c);
+          }
+          break;
+        case 'query':
+          if (!stateOverride && '#' == c) {
+            this._fragment = '#';
+            state = 'fragment';
+          } else if (EOF != c && '\t' != c && '\n' != c && '\r' != c) {
+            this._query += percentEscapeQuery(c);
+          }
+          break;
+        case 'fragment':
+          if (EOF != c && '\t' != c && '\n' != c && '\r' != c) {
+            this._fragment += c;
+          }
+          break;
         }
-        break;
-
-       case "query":
-        if (!stateOverride && "#" == c) {
-          this._fragment = "#";
-          state = "fragment";
-        } else if (EOF != c && "	" != c && "\n" != c && "\r" != c) {
-          this._query += percentEscapeQuery(c);
-        }
-        break;
-
-       case "fragment":
-        if (EOF != c && "	" != c && "\n" != c && "\r" != c) {
-          this._fragment += c;
-        }
-        break;
+        cursor++;
       }
-      cursor++;
-    }
   }
   function clear() {
-    this._scheme = "";
-    this._schemeData = "";
-    this._username = "";
+    this._scheme = '';
+    this._schemeData = '';
+    this._username = '';
     this._password = null;
-    this._host = "";
-    this._port = "";
+    this._host = '';
+    this._port = '';
     this._path = [];
-    this._query = "";
-    this._fragment = "";
+    this._query = '';
+    this._fragment = '';
     this._isInvalid = false;
     this._isRelative = false;
   }
   function jURL(url, base) {
-    if (base !== undefined && !(base instanceof jURL)) base = new jURL(String(base));
+    if (base !== undefined && !(base instanceof jURL))
+      base = new jURL(String(base));
     this._url = url;
     clear.call(this);
-    var input = url.replace(/^[ \t\r\n\f]+|[ \t\r\n\f]+$/g, "");
+    var input = url.replace(/^[ \t\r\n\f]+|[ \t\r\n\f]+$/g, '');
     parse.call(this, input, null, base);
   }
   jURL.prototype = {
-    toString: function() {
+    toString: function () {
       return this.href;
     },
     get href() {
-      if (this._isInvalid) return this._url;
-      var authority = "";
-      if ("" != this._username || null != this._password) {
-        authority = this._username + (null != this._password ? ":" + this._password : "") + "@";
+      if (this._isInvalid)
+        return this._url;
+      var authority = '';
+      if ('' != this._username || null != this._password) {
+        authority = this._username + (null != this._password ? ':' + this._password : '') + '@';
       }
-      return this.protocol + (this._isRelative ? "//" + authority + this.host : "") + this.pathname + this._query + this._fragment;
+      return this.protocol + (this._isRelative ? '//' + authority + this.host : '') + this.pathname + this._query + this._fragment;
     },
     set href(href) {
       clear.call(this);
       parse.call(this, href);
     },
     get protocol() {
-      return this._scheme + ":";
+      return this._scheme + ':';
     },
     set protocol(protocol) {
-      if (this._isInvalid) return;
-      parse.call(this, protocol + ":", "scheme start");
+      if (this._isInvalid)
+        return;
+      parse.call(this, protocol + ':', 'scheme start');
     },
     get host() {
-      return this._isInvalid ? "" : this._port ? this._host + ":" + this._port : this._host;
+      return this._isInvalid ? '' : this._port ? this._host + ':' + this._port : this._host;
     },
     set host(host) {
-      if (this._isInvalid || !this._isRelative) return;
-      parse.call(this, host, "host");
+      if (this._isInvalid || !this._isRelative)
+        return;
+      parse.call(this, host, 'host');
     },
     get hostname() {
       return this._host;
     },
     set hostname(hostname) {
-      if (this._isInvalid || !this._isRelative) return;
-      parse.call(this, hostname, "hostname");
+      if (this._isInvalid || !this._isRelative)
+        return;
+      parse.call(this, hostname, 'hostname');
     },
     get port() {
       return this._port;
     },
     set port(port) {
-      if (this._isInvalid || !this._isRelative) return;
-      parse.call(this, port, "port");
+      if (this._isInvalid || !this._isRelative)
+        return;
+      parse.call(this, port, 'port');
     },
     get pathname() {
-      return this._isInvalid ? "" : this._isRelative ? "/" + this._path.join("/") : this._schemeData;
+      return this._isInvalid ? '' : this._isRelative ? '/' + this._path.join('/') : this._schemeData;
     },
     set pathname(pathname) {
-      if (this._isInvalid || !this._isRelative) return;
+      if (this._isInvalid || !this._isRelative)
+        return;
       this._path = [];
-      parse.call(this, pathname, "relative path start");
+      parse.call(this, pathname, 'relative path start');
     },
     get search() {
-      return this._isInvalid || !this._query || "?" == this._query ? "" : this._query;
+      return this._isInvalid || !this._query || '?' == this._query ? '' : this._query;
     },
     set search(search) {
-      if (this._isInvalid || !this._isRelative) return;
-      this._query = "?";
-      if ("?" == search[0]) search = search.slice(1);
-      parse.call(this, search, "query");
+      if (this._isInvalid || !this._isRelative)
+        return;
+      this._query = '?';
+      if ('?' == search[0])
+        search = search.slice(1);
+      parse.call(this, search, 'query');
     },
     get hash() {
-      return this._isInvalid || !this._fragment || "#" == this._fragment ? "" : this._fragment;
+      return this._isInvalid || !this._fragment || '#' == this._fragment ? '' : this._fragment;
     },
     set hash(hash) {
-      if (this._isInvalid) return;
-      this._fragment = "#";
-      if ("#" == hash[0]) hash = hash.slice(1);
-      parse.call(this, hash, "fragment");
+      if (this._isInvalid)
+        return;
+      this._fragment = '#';
+      if ('#' == hash[0])
+        hash = hash.slice(1);
+      parse.call(this, hash, 'fragment');
     },
     get origin() {
       var host;
       if (this._isInvalid || !this._scheme) {
-        return "";
+        return '';
       }
       switch (this._scheme) {
-       case "data":
-       case "file":
-       case "javascript":
-       case "mailto":
-        return "null";
+      case 'data':
+      case 'file':
+      case 'javascript':
+      case 'mailto':
+        return 'null';
       }
       host = this.host;
       if (!host) {
-        return "";
+        return '';
       }
-      return this._scheme + "://" + host;
+      return this._scheme + '://' + host;
     }
   };
   var OriginalURL = scope.URL;
   if (OriginalURL) {
-    jURL.createObjectURL = function(blob) {
+    jURL.createObjectURL = function (blob) {
       return OriginalURL.createObjectURL.apply(OriginalURL, arguments);
     };
-    jURL.revokeObjectURL = function(url) {
+    jURL.revokeObjectURL = function (url) {
       OriginalURL.revokeObjectURL(url);
     };
   }
   scope.URL = jURL;
-})(self);
-
-if (typeof WeakMap === "undefined") {
-  (function() {
+}(self));
+if (typeof WeakMap === 'undefined') {
+  (function () {
     var defineProperty = Object.defineProperty;
-    var counter = Date.now() % 1e9;
-    var WeakMap = function() {
-      this.name = "__st" + (Math.random() * 1e9 >>> 0) + (counter++ + "__");
+    var counter = Date.now() % 1000000000;
+    var WeakMap = function () {
+      this.name = '__st' + (Math.random() * 1000000000 >>> 0) + (counter++ + '__');
     };
     WeakMap.prototype = {
-      set: function(key, value) {
+      set: function (key, value) {
         var entry = key[this.name];
-        if (entry && entry[0] === key) entry[1] = value; else defineProperty(key, this.name, {
-          value: [ key, value ],
-          writable: true
-        });
+        if (entry && entry[0] === key)
+          entry[1] = value;
+        else
+          defineProperty(key, this.name, {
+            value: [
+              key,
+              value
+            ],
+            writable: true
+          });
         return this;
       },
-      get: function(key) {
+      get: function (key) {
         var entry;
         return (entry = key[this.name]) && entry[0] === key ? entry[1] : undefined;
       },
-      "delete": function(key) {
+      'delete': function (key) {
         var entry = key[this.name];
-        if (!entry || entry[0] !== key) return false;
+        if (!entry || entry[0] !== key)
+          return false;
         entry[0] = entry[1] = undefined;
         return true;
       },
-      has: function(key) {
+      has: function (key) {
         var entry = key[this.name];
-        if (!entry) return false;
+        if (!entry)
+          return false;
         return entry[0] === key;
       }
     };
     window.WeakMap = WeakMap;
-  })();
+  }());
 }
-
-(function(global) {
+(function (global) {
   if (global.JsMutationObserver) {
     return;
   }
@@ -620,18 +634,18 @@ if (typeof WeakMap === "undefined") {
   } else {
     var setImmediateQueue = [];
     var sentinel = String(Math.random());
-    window.addEventListener("message", function(e) {
+    window.addEventListener('message', function (e) {
       if (e.data === sentinel) {
         var queue = setImmediateQueue;
         setImmediateQueue = [];
-        queue.forEach(function(func) {
+        queue.forEach(function (func) {
           func();
         });
       }
     });
-    setImmediate = function(func) {
+    setImmediate = function (func) {
       setImmediateQueue.push(func);
-      window.postMessage(sentinel, "*");
+      window.postMessage(sentinel, '*');
     };
   }
   var isScheduled = false;
@@ -650,11 +664,11 @@ if (typeof WeakMap === "undefined") {
     isScheduled = false;
     var observers = scheduledObservers;
     scheduledObservers = [];
-    observers.sort(function(o1, o2) {
+    observers.sort(function (o1, o2) {
       return o1.uid_ - o2.uid_;
     });
     var anyNonEmpty = false;
-    observers.forEach(function(observer) {
+    observers.forEach(function (observer) {
       var queue = observer.takeRecords();
       removeTransientObserversFor(observer);
       if (queue.length) {
@@ -662,27 +676,32 @@ if (typeof WeakMap === "undefined") {
         anyNonEmpty = true;
       }
     });
-    if (anyNonEmpty) dispatchCallbacks();
+    if (anyNonEmpty)
+      dispatchCallbacks();
   }
   function removeTransientObserversFor(observer) {
-    observer.nodes_.forEach(function(node) {
+    observer.nodes_.forEach(function (node) {
       var registrations = registrationsTable.get(node);
-      if (!registrations) return;
-      registrations.forEach(function(registration) {
-        if (registration.observer === observer) registration.removeTransientObservers();
+      if (!registrations)
+        return;
+      registrations.forEach(function (registration) {
+        if (registration.observer === observer)
+          registration.removeTransientObservers();
       });
     });
   }
   function forEachAncestorAndObserverEnqueueRecord(target, callback) {
-    for (var node = target; node; node = node.parentNode) {
+    for (var node = target; node; node = Polymer.dom(node).parentNode) {
       var registrations = registrationsTable.get(node);
       if (registrations) {
         for (var j = 0; j < registrations.length; j++) {
           var registration = registrations[j];
           var options = registration.options;
-          if (node !== target && !options.subtree) continue;
+          if (node !== target && !options.subtree)
+            continue;
           var record = callback(options);
-          if (record) registration.enqueue(record);
+          if (record)
+            registration.enqueue(record);
         }
       }
     }
@@ -695,13 +714,14 @@ if (typeof WeakMap === "undefined") {
     this.uid_ = ++uidCounter;
   }
   JsMutationObserver.prototype = {
-    observe: function(target, options) {
+    observe: function (target, options) {
       target = wrapIfNeeded(target);
       if (!options.childList && !options.attributes && !options.characterData || options.attributeOldValue && !options.attributes || options.attributeFilter && options.attributeFilter.length && !options.attributes || options.characterDataOldValue && !options.characterData) {
         throw new SyntaxError();
       }
       var registrations = registrationsTable.get(target);
-      if (!registrations) registrationsTable.set(target, registrations = []);
+      if (!registrations)
+        registrationsTable.set(target, registrations = []);
       var registration;
       for (var i = 0; i < registrations.length; i++) {
         if (registrations[i].observer === this) {
@@ -718,8 +738,8 @@ if (typeof WeakMap === "undefined") {
       }
       registration.addListeners();
     },
-    disconnect: function() {
-      this.nodes_.forEach(function(node) {
+    disconnect: function () {
+      this.nodes_.forEach(function (node) {
         var registrations = registrationsTable.get(node);
         for (var i = 0; i < registrations.length; i++) {
           var registration = registrations[i];
@@ -732,7 +752,7 @@ if (typeof WeakMap === "undefined") {
       }, this);
       this.records_ = [];
     },
-    takeRecords: function() {
+    takeRecords: function () {
       var copyOfRecords = this.records_;
       this.records_ = [];
       return copyOfRecords;
@@ -743,8 +763,8 @@ if (typeof WeakMap === "undefined") {
     this.target = target;
     this.addedNodes = [];
     this.removedNodes = [];
-    this.previousSibling = null;
-    this.nextSibling = null;
+    Polymer.dom(this).previousSibling = null;
+    Polymer.dom(this).nextSibling = null;
     this.attributeName = null;
     this.attributeNamespace = null;
     this.oldValue = null;
@@ -753,8 +773,8 @@ if (typeof WeakMap === "undefined") {
     var record = new MutationRecord(original.type, original.target);
     record.addedNodes = original.addedNodes.slice();
     record.removedNodes = original.removedNodes.slice();
-    record.previousSibling = original.previousSibling;
-    record.nextSibling = original.nextSibling;
+    Polymer.dom(record).previousSibling = Polymer.dom(original).previousSibling;
+    Polymer.dom(record).nextSibling = Polymer.dom(original).nextSibling;
     record.attributeName = original.attributeName;
     record.attributeNamespace = original.attributeNamespace;
     record.oldValue = original.oldValue;
@@ -765,7 +785,8 @@ if (typeof WeakMap === "undefined") {
     return currentRecord = new MutationRecord(type, target);
   }
   function getRecordWithOldValue(oldValue) {
-    if (recordWithOldValue) return recordWithOldValue;
+    if (recordWithOldValue)
+      return recordWithOldValue;
     recordWithOldValue = copyMutationRecord(currentRecord);
     recordWithOldValue.oldValue = oldValue;
     return recordWithOldValue;
@@ -777,8 +798,10 @@ if (typeof WeakMap === "undefined") {
     return record === recordWithOldValue || record === currentRecord;
   }
   function selectRecord(lastRecord, newRecord) {
-    if (lastRecord === newRecord) return lastRecord;
-    if (recordWithOldValue && recordRepresentsCurrentMutation(lastRecord)) return recordWithOldValue;
+    if (lastRecord === newRecord)
+      return lastRecord;
+    if (recordWithOldValue && recordRepresentsCurrentMutation(lastRecord))
+      return recordWithOldValue;
     return null;
   }
   function Registration(observer, target, options) {
@@ -788,7 +811,7 @@ if (typeof WeakMap === "undefined") {
     this.transientObservedNodes = [];
   }
   Registration.prototype = {
-    enqueue: function(record) {
+    enqueue: function (record) {
       var records = this.observer.records_;
       var length = records.length;
       if (records.length > 0) {
@@ -803,38 +826,48 @@ if (typeof WeakMap === "undefined") {
       }
       records[length] = record;
     },
-    addListeners: function() {
+    addListeners: function () {
       this.addListeners_(this.target);
     },
-    addListeners_: function(node) {
+    addListeners_: function (node) {
       var options = this.options;
-      if (options.attributes) node.addEventListener("DOMAttrModified", this, true);
-      if (options.characterData) node.addEventListener("DOMCharacterDataModified", this, true);
-      if (options.childList) node.addEventListener("DOMNodeInserted", this, true);
-      if (options.childList || options.subtree) node.addEventListener("DOMNodeRemoved", this, true);
+      if (options.attributes)
+        node.addEventListener('DOMAttrModified', this, true);
+      if (options.characterData)
+        node.addEventListener('DOMCharacterDataModified', this, true);
+      if (options.childList)
+        node.addEventListener('DOMNodeInserted', this, true);
+      if (options.childList || options.subtree)
+        node.addEventListener('DOMNodeRemoved', this, true);
     },
-    removeListeners: function() {
+    removeListeners: function () {
       this.removeListeners_(this.target);
     },
-    removeListeners_: function(node) {
+    removeListeners_: function (node) {
       var options = this.options;
-      if (options.attributes) node.removeEventListener("DOMAttrModified", this, true);
-      if (options.characterData) node.removeEventListener("DOMCharacterDataModified", this, true);
-      if (options.childList) node.removeEventListener("DOMNodeInserted", this, true);
-      if (options.childList || options.subtree) node.removeEventListener("DOMNodeRemoved", this, true);
+      if (options.attributes)
+        node.removeEventListener('DOMAttrModified', this, true);
+      if (options.characterData)
+        node.removeEventListener('DOMCharacterDataModified', this, true);
+      if (options.childList)
+        node.removeEventListener('DOMNodeInserted', this, true);
+      if (options.childList || options.subtree)
+        node.removeEventListener('DOMNodeRemoved', this, true);
     },
-    addTransientObserver: function(node) {
-      if (node === this.target) return;
+    addTransientObserver: function (node) {
+      if (node === this.target)
+        return;
       this.addListeners_(node);
       this.transientObservedNodes.push(node);
       var registrations = registrationsTable.get(node);
-      if (!registrations) registrationsTable.set(node, registrations = []);
+      if (!registrations)
+        registrationsTable.set(node, registrations = []);
       registrations.push(this);
     },
-    removeTransientObservers: function() {
+    removeTransientObservers: function () {
       var transientObservedNodes = this.transientObservedNodes;
       this.transientObservedNodes = [];
-      transientObservedNodes.forEach(function(node) {
+      transientObservedNodes.forEach(function (node) {
         this.removeListeners_(node);
         var registrations = registrationsTable.get(node);
         for (var i = 0; i < registrations.length; i++) {
@@ -845,60 +878,62 @@ if (typeof WeakMap === "undefined") {
         }
       }, this);
     },
-    handleEvent: function(e) {
+    handleEvent: function (e) {
       e.stopImmediatePropagation();
       switch (e.type) {
-       case "DOMAttrModified":
+      case 'DOMAttrModified':
         var name = e.attrName;
         var namespace = e.relatedNode.namespaceURI;
         var target = e.target;
-        var record = new getRecord("attributes", target);
+        var record = new getRecord('attributes', target);
         record.attributeName = name;
         record.attributeNamespace = namespace;
         var oldValue = e.attrChange === MutationEvent.ADDITION ? null : e.prevValue;
-        forEachAncestorAndObserverEnqueueRecord(target, function(options) {
-          if (!options.attributes) return;
+        forEachAncestorAndObserverEnqueueRecord(target, function (options) {
+          if (!options.attributes)
+            return;
           if (options.attributeFilter && options.attributeFilter.length && options.attributeFilter.indexOf(name) === -1 && options.attributeFilter.indexOf(namespace) === -1) {
             return;
           }
-          if (options.attributeOldValue) return getRecordWithOldValue(oldValue);
+          if (options.attributeOldValue)
+            return getRecordWithOldValue(oldValue);
           return record;
         });
         break;
-
-       case "DOMCharacterDataModified":
+      case 'DOMCharacterDataModified':
         var target = e.target;
-        var record = getRecord("characterData", target);
+        var record = getRecord('characterData', target);
         var oldValue = e.prevValue;
-        forEachAncestorAndObserverEnqueueRecord(target, function(options) {
-          if (!options.characterData) return;
-          if (options.characterDataOldValue) return getRecordWithOldValue(oldValue);
+        forEachAncestorAndObserverEnqueueRecord(target, function (options) {
+          if (!options.characterData)
+            return;
+          if (options.characterDataOldValue)
+            return getRecordWithOldValue(oldValue);
           return record;
         });
         break;
-
-       case "DOMNodeRemoved":
+      case 'DOMNodeRemoved':
         this.addTransientObserver(e.target);
-
-       case "DOMNodeInserted":
+      case 'DOMNodeInserted':
         var changedNode = e.target;
         var addedNodes, removedNodes;
-        if (e.type === "DOMNodeInserted") {
-          addedNodes = [ changedNode ];
+        if (e.type === 'DOMNodeInserted') {
+          addedNodes = [changedNode];
           removedNodes = [];
         } else {
           addedNodes = [];
-          removedNodes = [ changedNode ];
+          removedNodes = [changedNode];
         }
-        var previousSibling = changedNode.previousSibling;
-        var nextSibling = changedNode.nextSibling;
-        var record = getRecord("childList", e.target.parentNode);
+        var previousSibling = Polymer.dom(changedNode).previousSibling;
+        var nextSibling = Polymer.dom(changedNode).nextSibling;
+        var record = getRecord('childList', Polymer.dom(e.target).parentNode);
         record.addedNodes = addedNodes;
         record.removedNodes = removedNodes;
-        record.previousSibling = previousSibling;
-        record.nextSibling = nextSibling;
-        forEachAncestorAndObserverEnqueueRecord(e.relatedNode, function(options) {
-          if (!options.childList) return;
+        Polymer.dom(record).previousSibling = previousSibling;
+        Polymer.dom(record).nextSibling = nextSibling;
+        forEachAncestorAndObserverEnqueueRecord(e.relatedNode, function (options) {
+          if (!options.childList)
+            return;
           return record;
         });
       }
@@ -910,42 +945,42 @@ if (typeof WeakMap === "undefined") {
     global.MutationObserver = JsMutationObserver;
     JsMutationObserver._isPolyfilled = true;
   }
-})(self);
-
-if (typeof HTMLTemplateElement === "undefined") {
-  (function() {
-    var TEMPLATE_TAG = "template";
-    var contentDoc = document.implementation.createHTMLDocument("template");
+}(self));
+if (typeof HTMLTemplateElement === 'undefined') {
+  (function () {
+    var TEMPLATE_TAG = 'template';
+    var contentDoc = document.implementation.createHTMLDocument('template');
     var canDecorate = true;
-    HTMLTemplateElement = function() {};
+    HTMLTemplateElement = function () {
+    };
     HTMLTemplateElement.prototype = Object.create(HTMLElement.prototype);
-    HTMLTemplateElement.decorate = function(template) {
+    HTMLTemplateElement.decorate = function (template) {
       if (template.content) {
         return;
       }
       template.content = contentDoc.createDocumentFragment();
       var child;
-      while (child = template.firstChild) {
-        template.content.appendChild(child);
+      while (child = Polymer.dom(template).firstChild) {
+        Polymer.dom(template.content).appendChild(child);
       }
       if (canDecorate) {
         try {
-          Object.defineProperty(template, "innerHTML", {
-            get: function() {
-              var o = "";
-              for (var e = this.content.firstChild; e; e = e.nextSibling) {
+          Object.defineProperty(template, 'innerHTML', {
+            get: function () {
+              var o = '';
+              for (var e = Polymer.dom(this.content).firstChild; e; e = Polymer.dom(e).nextSibling) {
                 o += e.outerHTML || escapeData(e.data);
               }
               return o;
             },
-            set: function(text) {
-              contentDoc.body.innerHTML = text;
+            set: function (text) {
+              Polymer.dom(contentDoc.body).innerHTML = text;
               HTMLTemplateElement.bootstrap(contentDoc);
-              while (this.content.firstChild) {
-                this.content.removeChild(this.content.firstChild);
+              while (Polymer.dom(this.content).firstChild) {
+                Polymer.dom(this.content).removeChild(Polymer.dom(this.content).firstChild);
               }
-              while (contentDoc.body.firstChild) {
-                this.content.appendChild(contentDoc.body.firstChild);
+              while (Polymer.dom(contentDoc.body).firstChild) {
+                Polymer.dom(this.content).appendChild(Polymer.dom(contentDoc.body).firstChild);
               }
             },
             configurable: true
@@ -956,20 +991,20 @@ if (typeof HTMLTemplateElement === "undefined") {
       }
       HTMLTemplateElement.bootstrap(template.content);
     };
-    HTMLTemplateElement.bootstrap = function(doc) {
-      var templates = doc.querySelectorAll(TEMPLATE_TAG);
+    HTMLTemplateElement.bootstrap = function (doc) {
+      var templates = Polymer.dom(doc).querySelectorAll(TEMPLATE_TAG);
       for (var i = 0, l = templates.length, t; i < l && (t = templates[i]); i++) {
         HTMLTemplateElement.decorate(t);
       }
     };
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener('DOMContentLoaded', function () {
       HTMLTemplateElement.bootstrap(document);
     });
     var createElement = document.createElement;
-    document.createElement = function() {
-      "use strict";
+    document.createElement = function () {
+      'use strict';
       var el = createElement.apply(document, arguments);
-      if (el.localName == "template") {
+      if (el.localName == 'template') {
         HTMLTemplateElement.decorate(el);
       }
       return el;
@@ -977,69 +1012,65 @@ if (typeof HTMLTemplateElement === "undefined") {
     var escapeDataRegExp = /[&\u00A0<>]/g;
     function escapeReplace(c) {
       switch (c) {
-       case "&":
-        return "&amp;";
-
-       case "<":
-        return "&lt;";
-
-       case ">":
-        return "&gt;";
-
-       case " ":
-        return "&nbsp;";
+      case '&':
+        return '&amp;';
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '\xA0':
+        return '&nbsp;';
       }
     }
     function escapeData(s) {
       return s.replace(escapeDataRegExp, escapeReplace);
     }
-  })();
+  }());
 }
-
-(function(scope) {
-  "use strict";
+(function (scope) {
+  'use strict';
   if (!window.performance) {
     var start = Date.now();
     window.performance = {
-      now: function() {
+      now: function () {
         return Date.now() - start;
       }
     };
   }
   if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function() {
+    window.requestAnimationFrame = function () {
       var nativeRaf = window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
-      return nativeRaf ? function(callback) {
-        return nativeRaf(function() {
+      return nativeRaf ? function (callback) {
+        return nativeRaf(function () {
           callback(performance.now());
         });
-      } : function(callback) {
-        return window.setTimeout(callback, 1e3 / 60);
+      } : function (callback) {
+        return window.setTimeout(callback, 1000 / 60);
       };
     }();
   }
   if (!window.cancelAnimationFrame) {
-    window.cancelAnimationFrame = function() {
-      return window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || function(id) {
+    window.cancelAnimationFrame = function () {
+      return window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || function (id) {
         clearTimeout(id);
       };
     }();
   }
-  var workingDefaultPrevented = function() {
-    var e = document.createEvent("Event");
-    e.initEvent("foo", true, true);
+  var workingDefaultPrevented = function () {
+    var e = document.createEvent('Event');
+    e.initEvent('foo', true, true);
     e.preventDefault();
     return e.defaultPrevented;
   }();
   if (!workingDefaultPrevented) {
     var origPreventDefault = Event.prototype.preventDefault;
-    Event.prototype.preventDefault = function() {
+    Event.prototype.preventDefault = function () {
       if (!this.cancelable) {
         return;
       }
       origPreventDefault.call(this);
-      Object.defineProperty(this, "defaultPrevented", {
-        get: function() {
+      Object.defineProperty(this, 'defaultPrevented', {
+        get: function () {
           return true;
         },
         configurable: true
@@ -1047,64 +1078,60 @@ if (typeof HTMLTemplateElement === "undefined") {
     };
   }
   var isIE = /Trident/.test(navigator.userAgent);
-  if (!window.CustomEvent || isIE && typeof window.CustomEvent !== "function") {
-    window.CustomEvent = function(inType, params) {
+  if (!window.CustomEvent || isIE && typeof window.CustomEvent !== 'function') {
+    window.CustomEvent = function (inType, params) {
       params = params || {};
-      var e = document.createEvent("CustomEvent");
+      var e = document.createEvent('CustomEvent');
       e.initCustomEvent(inType, Boolean(params.bubbles), Boolean(params.cancelable), params.detail);
       return e;
     };
     window.CustomEvent.prototype = window.Event.prototype;
   }
-  if (!window.Event || isIE && typeof window.Event !== "function") {
+  if (!window.Event || isIE && typeof window.Event !== 'function') {
     var origEvent = window.Event;
-    window.Event = function(inType, params) {
+    window.Event = function (inType, params) {
       params = params || {};
-      var e = document.createEvent("Event");
+      var e = document.createEvent('Event');
       e.initEvent(inType, Boolean(params.bubbles), Boolean(params.cancelable));
       return e;
     };
     window.Event.prototype = origEvent.prototype;
   }
-})(window.WebComponents);
-
-window.HTMLImports = window.HTMLImports || {
-  flags: {}
-};
-
-(function(scope) {
-  var IMPORT_LINK_TYPE = "import";
-  var useNative = Boolean(IMPORT_LINK_TYPE in document.createElement("link"));
+}(window.WebComponents));
+window.HTMLImports = window.HTMLImports || { flags: {} };
+(function (scope) {
+  var IMPORT_LINK_TYPE = 'import';
+  var useNative = Boolean(IMPORT_LINK_TYPE in document.createElement('link'));
   var hasShadowDOMPolyfill = Boolean(window.ShadowDOMPolyfill);
-  var wrap = function(node) {
+  var wrap = function (node) {
     return hasShadowDOMPolyfill ? window.ShadowDOMPolyfill.wrapIfNeeded(node) : node;
   };
   var rootDocument = wrap(document);
   var currentScriptDescriptor = {
-    get: function() {
-      var script = window.HTMLImports.currentScript || document.currentScript || (document.readyState !== "complete" ? document.scripts[document.scripts.length - 1] : null);
+    get: function () {
+      var script = window.HTMLImports.currentScript || document.currentScript || (document.readyState !== 'complete' ? document.scripts[document.scripts.length - 1] : null);
       return wrap(script);
     },
     configurable: true
   };
-  Object.defineProperty(document, "_currentScript", currentScriptDescriptor);
-  Object.defineProperty(rootDocument, "_currentScript", currentScriptDescriptor);
+  Object.defineProperty(document, '_currentScript', currentScriptDescriptor);
+  Object.defineProperty(rootDocument, '_currentScript', currentScriptDescriptor);
   var isIE = /Trident/.test(navigator.userAgent);
   function whenReady(callback, doc) {
     doc = doc || rootDocument;
-    whenDocumentReady(function() {
+    whenDocumentReady(function () {
       watchImportsLoad(callback, doc);
     }, doc);
   }
-  var requiredReadyState = isIE ? "complete" : "interactive";
-  var READY_EVENT = "readystatechange";
+  var requiredReadyState = isIE ? 'complete' : 'interactive';
+  var READY_EVENT = 'readystatechange';
   function isDocumentReady(doc) {
-    return doc.readyState === "complete" || doc.readyState === requiredReadyState;
+    return doc.readyState === 'complete' || doc.readyState === requiredReadyState;
   }
   function whenDocumentReady(callback, doc) {
     if (!isDocumentReady(doc)) {
-      var checkReady = function() {
-        if (doc.readyState === "complete" || doc.readyState === requiredReadyState) {
+      var checkReady = function () {
+        if (doc.readyState === 'complete' || doc.readyState === requiredReadyState) {
           doc.removeEventListener(READY_EVENT, checkReady);
           whenDocumentReady(callback, doc);
         }
@@ -1118,7 +1145,7 @@ window.HTMLImports = window.HTMLImports || {
     event.target.__loaded = true;
   }
   function watchImportsLoad(callback, doc) {
-    var imports = doc.querySelectorAll("link[rel=import]");
+    var imports = Polymer.dom(doc).querySelectorAll('link[rel=import]');
     var parsedCount = 0, importCount = imports.length, newImports = [], errorImports = [];
     function checkDone() {
       if (parsedCount == importCount && callback) {
@@ -1147,8 +1174,8 @@ window.HTMLImports = window.HTMLImports || {
           parsedCount++;
           checkDone();
         } else {
-          imp.addEventListener("load", loadedImport);
-          imp.addEventListener("error", errorLoadingImport);
+          imp.addEventListener('load', loadedImport);
+          imp.addEventListener('error', errorLoadingImport);
         }
       }
     } else {
@@ -1156,18 +1183,16 @@ window.HTMLImports = window.HTMLImports || {
     }
   }
   function isImportLoaded(link) {
-    return useNative ? link.__loaded || link.import && link.import.readyState !== "loading" : link.__importParsed;
+    return useNative ? link.__loaded || link.import && link.import.readyState !== 'loading' : link.__importParsed;
   }
   if (useNative) {
-    new MutationObserver(function(mxns) {
+    new MutationObserver(function (mxns) {
       for (var i = 0, l = mxns.length, m; i < l && (m = mxns[i]); i++) {
         if (m.addedNodes) {
           handleImports(m.addedNodes);
         }
       }
-    }).observe(document.head, {
-      childList: true
-    });
+    }).observe(document.head, { childList: true });
     function handleImports(nodes) {
       for (var i = 0, l = nodes.length, n; i < l && (n = nodes[i]); i++) {
         if (isImport(n)) {
@@ -1176,33 +1201,31 @@ window.HTMLImports = window.HTMLImports || {
       }
     }
     function isImport(element) {
-      return element.localName === "link" && element.rel === "import";
+      return element.localName === 'link' && element.rel === 'import';
     }
     function handleImport(element) {
       var loaded = element.import;
       if (loaded) {
-        markTargetLoaded({
-          target: element
-        });
+        markTargetLoaded({ target: element });
       } else {
-        element.addEventListener("load", markTargetLoaded);
-        element.addEventListener("error", markTargetLoaded);
+        element.addEventListener('load', markTargetLoaded);
+        element.addEventListener('error', markTargetLoaded);
       }
     }
-    (function() {
-      if (document.readyState === "loading") {
-        var imports = document.querySelectorAll("link[rel=import]");
+    (function () {
+      if (document.readyState === 'loading') {
+        var imports = Polymer.dom(document).querySelectorAll('link[rel=import]');
         for (var i = 0, l = imports.length, imp; i < l && (imp = imports[i]); i++) {
           handleImport(imp);
         }
       }
-    })();
+    }());
   }
-  whenReady(function(detail) {
+  whenReady(function (detail) {
     window.HTMLImports.ready = true;
     window.HTMLImports.readyTime = new Date().getTime();
-    var evt = rootDocument.createEvent("CustomEvent");
-    evt.initCustomEvent("HTMLImportsLoaded", true, true, detail);
+    var evt = rootDocument.createEvent('CustomEvent');
+    evt.initCustomEvent('HTMLImportsLoaded', true, true, detail);
     rootDocument.dispatchEvent(evt);
   });
   scope.IMPORT_LINK_TYPE = IMPORT_LINK_TYPE;
@@ -1210,71 +1233,68 @@ window.HTMLImports = window.HTMLImports || {
   scope.rootDocument = rootDocument;
   scope.whenReady = whenReady;
   scope.isIE = isIE;
-})(window.HTMLImports);
-
-(function(scope) {
+}(window.HTMLImports));
+(function (scope) {
   var modules = [];
-  var addModule = function(module) {
+  var addModule = function (module) {
     modules.push(module);
   };
-  var initializeModules = function() {
-    modules.forEach(function(module) {
+  var initializeModules = function () {
+    modules.forEach(function (module) {
       module(scope);
     });
   };
   scope.addModule = addModule;
   scope.initializeModules = initializeModules;
-})(window.HTMLImports);
-
-window.HTMLImports.addModule(function(scope) {
+}(window.HTMLImports));
+window.HTMLImports.addModule(function (scope) {
   var CSS_URL_REGEXP = /(url\()([^)]*)(\))/g;
   var CSS_IMPORT_REGEXP = /(@import[\s]+(?!url\())([^;]*)(;)/g;
   var path = {
-    resolveUrlsInStyle: function(style, linkUrl) {
+    resolveUrlsInStyle: function (style, linkUrl) {
       var doc = style.ownerDocument;
-      var resolver = doc.createElement("a");
-      style.textContent = this.resolveUrlsInCssText(style.textContent, linkUrl, resolver);
+      var resolver = doc.createElement('a');
+      Polymer.dom(style).textContent = this.resolveUrlsInCssText(Polymer.dom(style).textContent, linkUrl, resolver);
       return style;
     },
-    resolveUrlsInCssText: function(cssText, linkUrl, urlObj) {
+    resolveUrlsInCssText: function (cssText, linkUrl, urlObj) {
       var r = this.replaceUrls(cssText, urlObj, linkUrl, CSS_URL_REGEXP);
       r = this.replaceUrls(r, urlObj, linkUrl, CSS_IMPORT_REGEXP);
       return r;
     },
-    replaceUrls: function(text, urlObj, linkUrl, regexp) {
-      return text.replace(regexp, function(m, pre, url, post) {
-        var urlPath = url.replace(/["']/g, "");
+    replaceUrls: function (text, urlObj, linkUrl, regexp) {
+      return text.replace(regexp, function (m, pre, url, post) {
+        var urlPath = url.replace(/["']/g, '');
         if (linkUrl) {
           urlPath = new URL(urlPath, linkUrl).href;
         }
         urlObj.href = urlPath;
         urlPath = urlObj.href;
-        return pre + "'" + urlPath + "'" + post;
+        return pre + '\'' + urlPath + '\'' + post;
       });
     }
   };
   scope.path = path;
 });
-
-window.HTMLImports.addModule(function(scope) {
+window.HTMLImports.addModule(function (scope) {
   var xhr = {
     async: true,
-    ok: function(request) {
+    ok: function (request) {
       return request.status >= 200 && request.status < 300 || request.status === 304 || request.status === 0;
     },
-    load: function(url, next, nextContext) {
+    load: function (url, next, nextContext) {
       var request = new XMLHttpRequest();
       if (scope.flags.debug || scope.flags.bust) {
-        url += "?" + Math.random();
+        url += '?' + Math.random();
       }
-      request.open("GET", url, xhr.async);
-      request.addEventListener("readystatechange", function(e) {
+      request.open('GET', url, xhr.async);
+      request.addEventListener('readystatechange', function (e) {
         if (request.readyState === 4) {
           var redirectedUrl = null;
           try {
-            var locationHeader = request.getResponseHeader("Location");
+            var locationHeader = request.getResponseHeader('Location');
             if (locationHeader) {
-              redirectedUrl = locationHeader.substr(0, 1) === "/" ? location.origin + locationHeader : locationHeader;
+              redirectedUrl = locationHeader.substr(0, 1) === '/' ? location.origin + locationHeader : locationHeader;
             }
           } catch (e) {
             console.error(e.message);
@@ -1285,17 +1305,16 @@ window.HTMLImports.addModule(function(scope) {
       request.send();
       return request;
     },
-    loadDocument: function(url, next, nextContext) {
-      this.load(url, next, nextContext).responseType = "document";
+    loadDocument: function (url, next, nextContext) {
+      this.load(url, next, nextContext).responseType = 'document';
     }
   };
   scope.xhr = xhr;
 });
-
-window.HTMLImports.addModule(function(scope) {
+window.HTMLImports.addModule(function (scope) {
   var xhr = scope.xhr;
   var flags = scope.flags;
-  var Loader = function(onLoad, onComplete) {
+  var Loader = function (onLoad, onComplete) {
     this.cache = {};
     this.onload = onLoad;
     this.oncomplete = onComplete;
@@ -1303,26 +1322,26 @@ window.HTMLImports.addModule(function(scope) {
     this.pending = {};
   };
   Loader.prototype = {
-    addNodes: function(nodes) {
+    addNodes: function (nodes) {
       this.inflight += nodes.length;
       for (var i = 0, l = nodes.length, n; i < l && (n = nodes[i]); i++) {
         this.require(n);
       }
       this.checkDone();
     },
-    addNode: function(node) {
+    addNode: function (node) {
       this.inflight++;
       this.require(node);
       this.checkDone();
     },
-    require: function(elt) {
+    require: function (elt) {
       var url = elt.src || elt.href;
       elt.__nodeUrl = url;
       if (!this.dedupe(url, elt)) {
         this.fetch(url, elt);
       }
     },
-    dedupe: function(url, elt) {
+    dedupe: function (url, elt) {
       if (this.pending[url]) {
         this.pending[url].push(elt);
         return true;
@@ -1333,37 +1352,35 @@ window.HTMLImports.addModule(function(scope) {
         this.tail();
         return true;
       }
-      this.pending[url] = [ elt ];
+      this.pending[url] = [elt];
       return false;
     },
-    fetch: function(url, elt) {
-      flags.load && console.log("fetch", url, elt);
+    fetch: function (url, elt) {
+      flags.load && console.log('fetch', url, elt);
       if (!url) {
-        setTimeout(function() {
-          this.receive(url, elt, {
-            error: "href must be specified"
-          }, null);
+        setTimeout(function () {
+          this.receive(url, elt, { error: 'href must be specified' }, null);
         }.bind(this), 0);
       } else if (url.match(/^data:/)) {
-        var pieces = url.split(",");
+        var pieces = url.split(',');
         var header = pieces[0];
         var body = pieces[1];
-        if (header.indexOf(";base64") > -1) {
+        if (header.indexOf(';base64') > -1) {
           body = atob(body);
         } else {
           body = decodeURIComponent(body);
         }
-        setTimeout(function() {
+        setTimeout(function () {
           this.receive(url, elt, null, body);
         }.bind(this), 0);
       } else {
-        var receiveXhr = function(err, resource, redirectedUrl) {
+        var receiveXhr = function (err, resource, redirectedUrl) {
           this.receive(url, elt, err, resource, redirectedUrl);
         }.bind(this);
         xhr.load(url, receiveXhr);
       }
     },
-    receive: function(url, elt, err, resource, redirectedUrl) {
+    receive: function (url, elt, err, resource, redirectedUrl) {
       this.cache[url] = resource;
       var $p = this.pending[url];
       for (var i = 0, l = $p.length, p; i < l && (p = $p[i]); i++) {
@@ -1372,11 +1389,11 @@ window.HTMLImports.addModule(function(scope) {
       }
       this.pending[url] = null;
     },
-    tail: function() {
+    tail: function () {
       --this.inflight;
       this.checkDone();
     },
-    checkDone: function() {
+    checkDone: function () {
       if (!this.inflight) {
         this.oncomplete();
       }
@@ -1384,21 +1401,20 @@ window.HTMLImports.addModule(function(scope) {
   };
   scope.Loader = Loader;
 });
-
-window.HTMLImports.addModule(function(scope) {
-  var Observer = function(addCallback) {
+window.HTMLImports.addModule(function (scope) {
+  var Observer = function (addCallback) {
     this.addCallback = addCallback;
     this.mo = new MutationObserver(this.handler.bind(this));
   };
   Observer.prototype = {
-    handler: function(mutations) {
+    handler: function (mutations) {
       for (var i = 0, l = mutations.length, m; i < l && (m = mutations[i]); i++) {
-        if (m.type === "childList" && m.addedNodes.length) {
+        if (m.type === 'childList' && m.addedNodes.length) {
           this.addedNodes(m.addedNodes);
         }
       }
     },
-    addedNodes: function(nodes) {
+    addedNodes: function (nodes) {
       if (this.addCallback) {
         this.addCallback(nodes);
       }
@@ -1408,7 +1424,7 @@ window.HTMLImports.addModule(function(scope) {
         }
       }
     },
-    observe: function(root) {
+    observe: function (root) {
       this.mo.observe(root, {
         childList: true,
         subtree: true
@@ -1417,32 +1433,38 @@ window.HTMLImports.addModule(function(scope) {
   };
   scope.Observer = Observer;
 });
-
-window.HTMLImports.addModule(function(scope) {
+window.HTMLImports.addModule(function (scope) {
   var path = scope.path;
   var rootDocument = scope.rootDocument;
   var flags = scope.flags;
   var isIE = scope.isIE;
   var IMPORT_LINK_TYPE = scope.IMPORT_LINK_TYPE;
-  var IMPORT_SELECTOR = "link[rel=" + IMPORT_LINK_TYPE + "]";
+  var IMPORT_SELECTOR = 'link[rel=' + IMPORT_LINK_TYPE + ']';
   var importParser = {
     documentSelectors: IMPORT_SELECTOR,
-    importsSelectors: [ IMPORT_SELECTOR, "link[rel=stylesheet]:not([type])", "style:not([type])", "script:not([type])", 'script[type="application/javascript"]', 'script[type="text/javascript"]' ].join(","),
+    importsSelectors: [
+      IMPORT_SELECTOR,
+      'link[rel=stylesheet]:not([type])',
+      'style:not([type])',
+      'script:not([type])',
+      'script[type="application/javascript"]',
+      'script[type="text/javascript"]'
+    ].join(','),
     map: {
-      link: "parseLink",
-      script: "parseScript",
-      style: "parseStyle"
+      link: 'parseLink',
+      script: 'parseScript',
+      style: 'parseStyle'
     },
     dynamicElements: [],
-    parseNext: function() {
+    parseNext: function () {
       var next = this.nextToParse();
       if (next) {
         this.parse(next);
       }
     },
-    parse: function(elt) {
+    parse: function (elt) {
       if (this.isParsed(elt)) {
-        flags.parse && console.log("[%s] is already parsed", elt.localName);
+        flags.parse && console.log('[%s] is already parsed', elt.localName);
         return;
       }
       var fn = this[this.map[elt.localName]];
@@ -1451,17 +1473,17 @@ window.HTMLImports.addModule(function(scope) {
         fn.call(this, elt);
       }
     },
-    parseDynamic: function(elt, quiet) {
+    parseDynamic: function (elt, quiet) {
       this.dynamicElements.push(elt);
       if (!quiet) {
         this.parseNext();
       }
     },
-    markParsing: function(elt) {
-      flags.parse && console.log("parsing", elt);
+    markParsing: function (elt) {
+      flags.parse && console.log('parsing', elt);
       this.parsingElement = elt;
     },
-    markParsingComplete: function(elt) {
+    markParsingComplete: function (elt) {
       elt.__importParsed = true;
       this.markDynamicParsingComplete(elt);
       if (elt.__importElement) {
@@ -1469,15 +1491,15 @@ window.HTMLImports.addModule(function(scope) {
         this.markDynamicParsingComplete(elt.__importElement);
       }
       this.parsingElement = null;
-      flags.parse && console.log("completed", elt);
+      flags.parse && console.log('completed', elt);
     },
-    markDynamicParsingComplete: function(elt) {
+    markDynamicParsingComplete: function (elt) {
       var i = this.dynamicElements.indexOf(elt);
       if (i >= 0) {
         this.dynamicElements.splice(i, 1);
       }
     },
-    parseImport: function(elt) {
+    parseImport: function (elt) {
       elt.import = elt.__doc;
       if (window.HTMLImports.__importsParsingHook) {
         window.HTMLImports.__importsParsingHook(elt);
@@ -1487,28 +1509,22 @@ window.HTMLImports.addModule(function(scope) {
       }
       this.markParsingComplete(elt);
       if (elt.__resource && !elt.__error) {
-        elt.dispatchEvent(new CustomEvent("load", {
-          bubbles: false
-        }));
+        elt.dispatchEvent(new CustomEvent('load', { bubbles: false }));
       } else {
-        elt.dispatchEvent(new CustomEvent("error", {
-          bubbles: false
-        }));
+        elt.dispatchEvent(new CustomEvent('error', { bubbles: false }));
       }
       if (elt.__pending) {
         var fn;
         while (elt.__pending.length) {
           fn = elt.__pending.shift();
           if (fn) {
-            fn({
-              target: elt
-            });
+            fn({ target: elt });
           }
         }
       }
       this.parseNext();
     },
-    parseLink: function(linkElt) {
+    parseLink: function (linkElt) {
       if (nodeIsImport(linkElt)) {
         this.parseImport(linkElt);
       } else {
@@ -1516,44 +1532,44 @@ window.HTMLImports.addModule(function(scope) {
         this.parseGeneric(linkElt);
       }
     },
-    parseStyle: function(elt) {
+    parseStyle: function (elt) {
       var src = elt;
       elt = cloneStyle(elt);
       src.__appliedElement = elt;
       elt.__importElement = src;
       this.parseGeneric(elt);
     },
-    parseGeneric: function(elt) {
+    parseGeneric: function (elt) {
       this.trackElement(elt);
       this.addElementToDocument(elt);
     },
-    rootImportForElement: function(elt) {
+    rootImportForElement: function (elt) {
       var n = elt;
       while (n.ownerDocument.__importLink) {
         n = n.ownerDocument.__importLink;
       }
       return n;
     },
-    addElementToDocument: function(elt) {
+    addElementToDocument: function (elt) {
       var port = this.rootImportForElement(elt.__importElement || elt);
-      port.parentNode.insertBefore(elt, port);
+      Polymer.dom(Polymer.dom(port).parentNode).insertBefore(elt, port);
     },
-    trackElement: function(elt, callback) {
+    trackElement: function (elt, callback) {
       var self = this;
-      var done = function(e) {
-        elt.removeEventListener("load", done);
-        elt.removeEventListener("error", done);
+      var done = function (e) {
+        elt.removeEventListener('load', done);
+        elt.removeEventListener('error', done);
         if (callback) {
           callback(e);
         }
         self.markParsingComplete(elt);
         self.parseNext();
       };
-      elt.addEventListener("load", done);
-      elt.addEventListener("error", done);
-      if (isIE && elt.localName === "style") {
+      elt.addEventListener('load', done);
+      elt.addEventListener('error', done);
+      if (isIE && elt.localName === 'style') {
         var fakeLoad = false;
-        if (elt.textContent.indexOf("@import") == -1) {
+        if (Polymer.dom(elt).textContent.indexOf('@import') == -1) {
           fakeLoad = true;
         } else if (elt.sheet) {
           fakeLoad = true;
@@ -1566,35 +1582,33 @@ window.HTMLImports.addModule(function(scope) {
           }
         }
         if (fakeLoad) {
-          setTimeout(function() {
-            elt.dispatchEvent(new CustomEvent("load", {
-              bubbles: false
-            }));
+          setTimeout(function () {
+            elt.dispatchEvent(new CustomEvent('load', { bubbles: false }));
           });
         }
       }
     },
-    parseScript: function(scriptElt) {
-      var script = document.createElement("script");
+    parseScript: function (scriptElt) {
+      var script = document.createElement('script');
       script.__importElement = scriptElt;
       script.src = scriptElt.src ? scriptElt.src : generateScriptDataUrl(scriptElt);
       scope.currentScript = scriptElt;
-      this.trackElement(script, function(e) {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
+      this.trackElement(script, function (e) {
+        if (Polymer.dom(script).parentNode) {
+          Polymer.dom(Polymer.dom(script).parentNode).removeChild(script);
         }
         scope.currentScript = null;
       });
       this.addElementToDocument(script);
     },
-    nextToParse: function() {
+    nextToParse: function () {
       this._mayParse = [];
       return !this.parsingElement && (this.nextToParseInDoc(rootDocument) || this.nextToParseDynamic());
     },
-    nextToParseInDoc: function(doc, link) {
+    nextToParseInDoc: function (doc, link) {
       if (doc && this._mayParse.indexOf(doc) < 0) {
         this._mayParse.push(doc);
-        var nodes = doc.querySelectorAll(this.parseSelectorsForNode(doc));
+        var nodes = Polymer.dom(doc).querySelectorAll(this.parseSelectorsForNode(doc));
         for (var i = 0, l = nodes.length, p = 0, n; i < l && (n = nodes[i]); i++) {
           if (!this.isParsed(n)) {
             if (this.hasResource(n)) {
@@ -1607,20 +1621,20 @@ window.HTMLImports.addModule(function(scope) {
       }
       return link;
     },
-    nextToParseDynamic: function() {
+    nextToParseDynamic: function () {
       return this.dynamicElements[0];
     },
-    parseSelectorsForNode: function(node) {
+    parseSelectorsForNode: function (node) {
       var doc = node.ownerDocument || node;
       return doc === rootDocument ? this.documentSelectors : this.importsSelectors;
     },
-    isParsed: function(node) {
+    isParsed: function (node) {
       return node.__importParsed;
     },
-    needsDynamicParsing: function(elt) {
+    needsDynamicParsing: function (elt) {
       return this.dynamicElements.indexOf(elt) >= 0;
     },
-    hasResource: function(node) {
+    hasResource: function (node) {
       if (nodeIsImport(node) && node.__doc === undefined) {
         return false;
       }
@@ -1628,34 +1642,33 @@ window.HTMLImports.addModule(function(scope) {
     }
   };
   function nodeIsImport(elt) {
-    return elt.localName === "link" && elt.rel === IMPORT_LINK_TYPE;
+    return elt.localName === 'link' && elt.rel === IMPORT_LINK_TYPE;
   }
   function generateScriptDataUrl(script) {
     var scriptContent = generateScriptContent(script);
-    return "data:text/javascript;charset=utf-8," + encodeURIComponent(scriptContent);
+    return 'data:text/javascript;charset=utf-8,' + encodeURIComponent(scriptContent);
   }
   function generateScriptContent(script) {
-    return script.textContent + generateSourceMapHint(script);
+    return Polymer.dom(script).textContent + generateSourceMapHint(script);
   }
   function generateSourceMapHint(script) {
     var owner = script.ownerDocument;
     owner.__importedScripts = owner.__importedScripts || 0;
     var moniker = script.ownerDocument.baseURI;
-    var num = owner.__importedScripts ? "-" + owner.__importedScripts : "";
+    var num = owner.__importedScripts ? '-' + owner.__importedScripts : '';
     owner.__importedScripts++;
-    return "\n//# sourceURL=" + moniker + num + ".js\n";
+    return '\n//# sourceURL=' + moniker + num + '.js\n';
   }
   function cloneStyle(style) {
-    var clone = style.ownerDocument.createElement("style");
-    clone.textContent = style.textContent;
+    var clone = style.ownerDocument.createElement('style');
+    Polymer.dom(clone).textContent = Polymer.dom(style).textContent;
     path.resolveUrlsInStyle(clone);
     return clone;
   }
   scope.parser = importParser;
   scope.IMPORT_SELECTOR = IMPORT_SELECTOR;
 });
-
-window.HTMLImports.addModule(function(scope) {
+window.HTMLImports.addModule(function (scope) {
   var flags = scope.flags;
   var IMPORT_LINK_TYPE = scope.IMPORT_LINK_TYPE;
   var IMPORT_SELECTOR = scope.IMPORT_SELECTOR;
@@ -1666,23 +1679,23 @@ window.HTMLImports.addModule(function(scope) {
   var importer = {
     documents: {},
     documentPreloadSelectors: IMPORT_SELECTOR,
-    importsPreloadSelectors: [ IMPORT_SELECTOR ].join(","),
-    loadNode: function(node) {
+    importsPreloadSelectors: [IMPORT_SELECTOR].join(','),
+    loadNode: function (node) {
       importLoader.addNode(node);
     },
-    loadSubtree: function(parent) {
+    loadSubtree: function (parent) {
       var nodes = this.marshalNodes(parent);
       importLoader.addNodes(nodes);
     },
-    marshalNodes: function(parent) {
-      return parent.querySelectorAll(this.loadSelectorsForNode(parent));
+    marshalNodes: function (parent) {
+      return Polymer.dom(parent).querySelectorAll(this.loadSelectorsForNode(parent));
     },
-    loadSelectorsForNode: function(node) {
+    loadSelectorsForNode: function (node) {
       var doc = node.ownerDocument || node;
       return doc === rootDocument ? this.documentPreloadSelectors : this.importsPreloadSelectors;
     },
-    loaded: function(url, elt, resource, err, redirectedUrl) {
-      flags.load && console.log("loaded", url, elt);
+    loaded: function (url, elt, resource, err, redirectedUrl) {
+      flags.load && console.log('loaded', url, elt);
       elt.__resource = resource;
       elt.__error = err;
       if (isImportLink(elt)) {
@@ -1699,12 +1712,12 @@ window.HTMLImports.addModule(function(scope) {
       }
       parser.parseNext();
     },
-    bootDocument: function(doc) {
+    bootDocument: function (doc) {
       this.loadSubtree(doc);
       this.observer.observe(doc);
       parser.parseNext();
     },
-    loadedAll: function() {
+    loadedAll: function () {
       parser.parseNext();
     }
   };
@@ -1714,26 +1727,24 @@ window.HTMLImports.addModule(function(scope) {
     return isLinkRel(elt, IMPORT_LINK_TYPE);
   }
   function isLinkRel(elt, rel) {
-    return elt.localName === "link" && elt.getAttribute("rel") === rel;
+    return elt.localName === 'link' && elt.getAttribute('rel') === rel;
   }
   function hasBaseURIAccessor(doc) {
-    return !!Object.getOwnPropertyDescriptor(doc, "baseURI");
+    return !!Object.getOwnPropertyDescriptor(doc, 'baseURI');
   }
   function makeDocument(resource, url) {
     var doc = document.implementation.createHTMLDocument(IMPORT_LINK_TYPE);
     doc._URL = url;
-    var base = doc.createElement("base");
-    base.setAttribute("href", url);
+    var base = doc.createElement('base');
+    Polymer.dom(base).setAttribute('href', url);
     if (!doc.baseURI && !hasBaseURIAccessor(doc)) {
-      Object.defineProperty(doc, "baseURI", {
-        value: url
-      });
+      Object.defineProperty(doc, 'baseURI', { value: url });
     }
-    var meta = doc.createElement("meta");
-    meta.setAttribute("charset", "utf-8");
-    doc.head.appendChild(meta);
-    doc.head.appendChild(base);
-    doc.body.innerHTML = resource;
+    var meta = doc.createElement('meta');
+    Polymer.dom(meta).setAttribute('charset', 'utf-8');
+    Polymer.dom(doc.head).appendChild(meta);
+    Polymer.dom(doc.head).appendChild(base);
+    Polymer.dom(doc.body).innerHTML = resource;
     if (window.HTMLTemplateElement && HTMLTemplateElement.bootstrap) {
       HTMLTemplateElement.bootstrap(doc);
     }
@@ -1741,24 +1752,23 @@ window.HTMLImports.addModule(function(scope) {
   }
   if (!document.baseURI) {
     var baseURIDescriptor = {
-      get: function() {
-        var base = document.querySelector("base");
+      get: function () {
+        var base = Polymer.dom(document).querySelector('base');
         return base ? base.href : window.location.href;
       },
       configurable: true
     };
-    Object.defineProperty(document, "baseURI", baseURIDescriptor);
-    Object.defineProperty(rootDocument, "baseURI", baseURIDescriptor);
+    Object.defineProperty(document, 'baseURI', baseURIDescriptor);
+    Object.defineProperty(rootDocument, 'baseURI', baseURIDescriptor);
   }
   scope.importer = importer;
   scope.importLoader = importLoader;
 });
-
-window.HTMLImports.addModule(function(scope) {
+window.HTMLImports.addModule(function (scope) {
   var parser = scope.parser;
   var importer = scope.importer;
   var dynamic = {
-    added: function(nodes) {
+    added: function (nodes) {
       var owner, parsed, loading;
       for (var i = 0, l = nodes.length, n; i < l && (n = nodes[i]); i++) {
         if (!owner) {
@@ -1774,18 +1784,17 @@ window.HTMLImports.addModule(function(scope) {
         }
       }
     },
-    shouldLoadNode: function(node) {
+    shouldLoadNode: function (node) {
       return node.nodeType === 1 && matches.call(node, importer.loadSelectorsForNode(node));
     },
-    shouldParseNode: function(node) {
+    shouldParseNode: function (node) {
       return node.nodeType === 1 && matches.call(node, parser.parseSelectorsForNode(node));
     }
   };
   importer.observer.addCallback = dynamic.added.bind(dynamic);
   var matches = HTMLElement.prototype.matches || HTMLElement.prototype.matchesSelector || HTMLElement.prototype.webkitMatchesSelector || HTMLElement.prototype.mozMatchesSelector || HTMLElement.prototype.msMatchesSelector;
 });
-
-(function(scope) {
+(function (scope) {
   var initializeModules = scope.initializeModules;
   var isIE = scope.isIE;
   if (scope.useNative) {
@@ -1796,25 +1805,21 @@ window.HTMLImports.addModule(function(scope) {
   function bootstrap() {
     window.HTMLImports.importer.bootDocument(rootDocument);
   }
-  if (document.readyState === "complete" || document.readyState === "interactive" && !window.attachEvent) {
+  if (document.readyState === 'complete' || document.readyState === 'interactive' && !window.attachEvent) {
     bootstrap();
   } else {
-    document.addEventListener("DOMContentLoaded", bootstrap);
+    document.addEventListener('DOMContentLoaded', bootstrap);
   }
-})(window.HTMLImports);
-
-window.CustomElements = window.CustomElements || {
-  flags: {}
-};
-
-(function(scope) {
+}(window.HTMLImports));
+window.CustomElements = window.CustomElements || { flags: {} };
+(function (scope) {
   var flags = scope.flags;
   var modules = [];
-  var addModule = function(module) {
+  var addModule = function (module) {
     modules.push(module);
   };
-  var initializeModules = function() {
-    modules.forEach(function(module) {
+  var initializeModules = function () {
+    modules.forEach(function (module) {
       module(scope);
     });
   };
@@ -1823,12 +1828,11 @@ window.CustomElements = window.CustomElements || {
   scope.hasNative = Boolean(document.registerElement);
   scope.isIE = /Trident/.test(navigator.userAgent);
   scope.useNative = !flags.register && scope.hasNative && !window.ShadowDOMPolyfill && (!window.HTMLImports || window.HTMLImports.useNative);
-})(window.CustomElements);
-
-window.CustomElements.addModule(function(scope) {
-  var IMPORT_LINK_TYPE = window.HTMLImports ? window.HTMLImports.IMPORT_LINK_TYPE : "none";
+}(window.CustomElements));
+window.CustomElements.addModule(function (scope) {
+  var IMPORT_LINK_TYPE = window.HTMLImports ? window.HTMLImports.IMPORT_LINK_TYPE : 'none';
   function forSubtree(node, cb) {
-    findAllElements(node, function(e) {
+    findAllElements(node, function (e) {
       if (cb(e)) {
         return true;
       }
@@ -1837,11 +1841,11 @@ window.CustomElements.addModule(function(scope) {
     forRoots(node, cb);
   }
   function findAllElements(node, find, data) {
-    var e = node.firstElementChild;
+    var e = Polymer.dom(node).firstElementChild;
     if (!e) {
-      e = node.firstChild;
+      e = Polymer.dom(node).firstChild;
       while (e && e.nodeType !== Node.ELEMENT_NODE) {
-        e = e.nextSibling;
+        e = Polymer.dom(e).nextSibling;
       }
     }
     while (e) {
@@ -1868,7 +1872,7 @@ window.CustomElements.addModule(function(scope) {
       return;
     }
     processingDocuments.push(doc);
-    var imports = doc.querySelectorAll("link[rel=" + IMPORT_LINK_TYPE + "]");
+    var imports = Polymer.dom(doc).querySelectorAll('link[rel=' + IMPORT_LINK_TYPE + ']');
     for (var i = 0, l = imports.length, n; i < l && (n = imports[i]); i++) {
       if (n.import) {
         _forDocumentTree(n.import, cb, processingDocuments);
@@ -1879,8 +1883,7 @@ window.CustomElements.addModule(function(scope) {
   scope.forDocumentTree = forDocumentTree;
   scope.forSubtree = forSubtree;
 });
-
-window.CustomElements.addModule(function(scope) {
+window.CustomElements.addModule(function (scope) {
   var flags = scope.flags;
   var forSubtree = scope.forSubtree;
   var forDocumentTree = scope.forDocumentTree;
@@ -1896,13 +1899,13 @@ window.CustomElements.addModule(function(scope) {
     }
   }
   function addedSubtree(node, isAttached) {
-    forSubtree(node, function(e) {
+    forSubtree(node, function (e) {
       if (added(e, isAttached)) {
         return true;
       }
     });
   }
-  var hasThrottledAttached = window.MutationObserver._isPolyfilled && flags["throttle-attached"];
+  var hasThrottledAttached = window.MutationObserver._isPolyfilled && flags['throttle-attached'];
   scope.hasPolyfillMutations = hasThrottledAttached;
   scope.hasThrottledAttached = hasThrottledAttached;
   var isPendingMutations = false;
@@ -1924,7 +1927,7 @@ window.CustomElements.addModule(function(scope) {
   }
   function attached(element) {
     if (hasThrottledAttached) {
-      deferMutation(function() {
+      deferMutation(function () {
         _attached(element);
       });
     } else {
@@ -1941,13 +1944,13 @@ window.CustomElements.addModule(function(scope) {
   }
   function detachedNode(node) {
     detached(node);
-    forSubtree(node, function(e) {
+    forSubtree(node, function (e) {
       detached(e);
     });
   }
   function detached(element) {
     if (hasThrottledAttached) {
-      deferMutation(function() {
+      deferMutation(function () {
         _detached(element);
       });
     } else {
@@ -1969,12 +1972,12 @@ window.CustomElements.addModule(function(scope) {
       if (p == doc) {
         return true;
       }
-      p = p.parentNode || p.nodeType === Node.DOCUMENT_FRAGMENT_NODE && p.host;
+      p = Polymer.dom(p).parentNode || p.nodeType === Node.DOCUMENT_FRAGMENT_NODE && p.host;
     }
   }
   function watchShadow(node) {
     if (node.shadowRoot && !node.shadowRoot.__watched) {
-      flags.dom && console.log("watching shadow-root for: ", node.localName);
+      flags.dom && console.log('watching shadow-root for: ', node.localName);
       var root = node.shadowRoot;
       while (root) {
         observe(root);
@@ -1985,28 +1988,28 @@ window.CustomElements.addModule(function(scope) {
   function handler(root, mutations) {
     if (flags.dom) {
       var mx = mutations[0];
-      if (mx && mx.type === "childList" && mx.addedNodes) {
+      if (mx && mx.type === 'childList' && mx.addedNodes) {
         if (mx.addedNodes) {
           var d = mx.addedNodes[0];
           while (d && d !== document && !d.host) {
-            d = d.parentNode;
+            d = Polymer.dom(d).parentNode;
           }
-          var u = d && (d.URL || d._URL || d.host && d.host.localName) || "";
-          u = u.split("/?").shift().split("/").pop();
+          var u = d && (d.URL || d._URL || d.host && d.host.localName) || '';
+          u = u.split('/?').shift().split('/').pop();
         }
       }
-      console.group("mutations (%d) [%s]", mutations.length, u || "");
+      console.group('mutations (%d) [%s]', mutations.length, u || '');
     }
     var isAttached = inDocument(root);
-    mutations.forEach(function(mx) {
-      if (mx.type === "childList") {
-        forEach(mx.addedNodes, function(n) {
+    mutations.forEach(function (mx) {
+      if (mx.type === 'childList') {
+        forEach(mx.addedNodes, function (n) {
           if (!n.localName) {
             return;
           }
           addedNode(n, isAttached);
         });
-        forEach(mx.removedNodes, function(n) {
+        forEach(mx.removedNodes, function (n) {
           if (!n.localName) {
             return;
           }
@@ -2021,8 +2024,8 @@ window.CustomElements.addModule(function(scope) {
     if (!node) {
       node = window.wrap(document);
     }
-    while (node.parentNode) {
-      node = node.parentNode;
+    while (Polymer.dom(node).parentNode) {
+      node = Polymer.dom(node).parentNode;
     }
     var observer = node.__observer;
     if (observer) {
@@ -2044,7 +2047,7 @@ window.CustomElements.addModule(function(scope) {
   }
   function upgradeDocument(doc) {
     doc = window.wrap(doc);
-    flags.dom && console.group("upgradeDocument: ", doc.baseURI.split("/").pop());
+    flags.dom && console.group('upgradeDocument: ', doc.baseURI.split('/').pop());
     var isMainDocument = doc === window.wrap(document);
     addedNode(doc, isMainDocument);
     observe(doc);
@@ -2055,7 +2058,7 @@ window.CustomElements.addModule(function(scope) {
   }
   var originalCreateShadowRoot = Element.prototype.createShadowRoot;
   if (originalCreateShadowRoot) {
-    Element.prototype.createShadowRoot = function() {
+    Element.prototype.createShadowRoot = function () {
       var root = originalCreateShadowRoot.call(this);
       window.CustomElements.watchShadow(this);
       return root;
@@ -2069,17 +2072,16 @@ window.CustomElements.addModule(function(scope) {
   scope.attached = attached;
   scope.takeRecords = takeRecords;
 });
-
-window.CustomElements.addModule(function(scope) {
+window.CustomElements.addModule(function (scope) {
   var flags = scope.flags;
   function upgrade(node, isAttached) {
-    if (node.localName === "template") {
+    if (node.localName === 'template') {
       if (window.HTMLTemplateElement && HTMLTemplateElement.decorate) {
         HTMLTemplateElement.decorate(node);
       }
     }
     if (!node.__upgraded__ && node.nodeType === Node.ELEMENT_NODE) {
-      var is = node.getAttribute("is");
+      var is = node.getAttribute('is');
       var definition = scope.getRegisteredDefinition(node.localName) || scope.getRegisteredDefinition(is);
       if (definition) {
         if (is && definition.tag == node.localName || !is && !definition.extends) {
@@ -2089,9 +2091,9 @@ window.CustomElements.addModule(function(scope) {
     }
   }
   function upgradeWithDefinition(element, definition, isAttached) {
-    flags.upgrade && console.group("upgrade:", element.localName);
+    flags.upgrade && console.group('upgrade:', element.localName);
     if (definition.is) {
-      element.setAttribute("is", definition.is);
+      Polymer.dom(element).setAttribute('is', definition.is);
     }
     implementPrototype(element, definition);
     element.__upgraded__ = true;
@@ -2134,8 +2136,7 @@ window.CustomElements.addModule(function(scope) {
   scope.upgradeWithDefinition = upgradeWithDefinition;
   scope.implementPrototype = implementPrototype;
 });
-
-window.CustomElements.addModule(function(scope) {
+window.CustomElements.addModule(function (scope) {
   var isIE = scope.isIE;
   var upgradeDocumentTree = scope.upgradeDocumentTree;
   var upgradeAll = scope.upgradeAll;
@@ -2145,16 +2146,16 @@ window.CustomElements.addModule(function(scope) {
   function register(name, options) {
     var definition = options || {};
     if (!name) {
-      throw new Error("document.registerElement: first argument `name` must not be empty");
+      throw new Error('document.registerElement: first argument `name` must not be empty');
     }
-    if (name.indexOf("-") < 0) {
-      throw new Error("document.registerElement: first argument ('name') must contain a dash ('-'). Argument provided was '" + String(name) + "'.");
+    if (name.indexOf('-') < 0) {
+      throw new Error('document.registerElement: first argument (\'name\') must contain a dash (\'-\'). Argument provided was \'' + String(name) + '\'.');
     }
     if (isReservedTag(name)) {
-      throw new Error("Failed to execute 'registerElement' on 'Document': Registration failed for type '" + String(name) + "'. The type name is invalid.");
+      throw new Error('Failed to execute \'registerElement\' on \'Document\': Registration failed for type \'' + String(name) + '\'. The type name is invalid.');
     }
     if (getRegisteredDefinition(name)) {
-      throw new Error("DuplicateDefinitionError: a type with name '" + String(name) + "' is already registered");
+      throw new Error('DuplicateDefinitionError: a type with name \'' + String(name) + '\' is already registered');
     }
     if (!definition.prototype) {
       definition.prototype = Object.create(HTMLElement.prototype);
@@ -2175,18 +2176,18 @@ window.CustomElements.addModule(function(scope) {
     return definition.ctor;
   }
   function overrideAttributeApi(prototype) {
-    if (prototype.setAttribute._polyfilled) {
+    if (Polymer.dom(prototype).setAttribute._polyfilled) {
       return;
     }
-    var setAttribute = prototype.setAttribute;
-    prototype.setAttribute = function(name, value) {
+    var setAttribute = Polymer.dom(prototype).setAttribute;
+    Polymer.dom(prototype).setAttribute = function (name, value) {
       changeAttribute.call(this, name, value, setAttribute);
     };
-    var removeAttribute = prototype.removeAttribute;
-    prototype.removeAttribute = function(name) {
+    var removeAttribute = Polymer.dom(prototype).removeAttribute;
+    Polymer.dom(prototype).removeAttribute = function (name) {
       changeAttribute.call(this, name, null, removeAttribute);
     };
-    prototype.setAttribute._polyfilled = true;
+    Polymer.dom(prototype).setAttribute._polyfilled = true;
   }
   function changeAttribute(name, value, operation) {
     name = name.toLowerCase();
@@ -2204,11 +2205,20 @@ window.CustomElements.addModule(function(scope) {
       }
     }
   }
-  var reservedTagList = [ "annotation-xml", "color-profile", "font-face", "font-face-src", "font-face-uri", "font-face-format", "font-face-name", "missing-glyph" ];
+  var reservedTagList = [
+    'annotation-xml',
+    'color-profile',
+    'font-face',
+    'font-face-src',
+    'font-face-uri',
+    'font-face-format',
+    'font-face-name',
+    'missing-glyph'
+  ];
   function ancestry(extnds) {
     var extendee = getRegisteredDefinition(extnds);
     if (extendee) {
-      return ancestry(extendee.extends).concat([ extendee ]);
+      return ancestry(extendee.extends).concat([extendee]);
     }
     return [];
   }
@@ -2242,7 +2252,7 @@ window.CustomElements.addModule(function(scope) {
         proto = ancestor;
       }
       if (!foundPrototype) {
-        console.warn(definition.tag + " prototype not found in prototype chain for " + definition.is);
+        console.warn(definition.tag + ' prototype not found in prototype chain for ' + definition.is);
       }
       definition.native = nativePrototype;
     }
@@ -2260,11 +2270,11 @@ window.CustomElements.addModule(function(scope) {
     registry[name] = definition;
   }
   function generateConstructor(definition) {
-    return function() {
+    return function () {
       return instantiate(definition);
     };
   }
-  var HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+  var HTML_NAMESPACE = 'http://www.w3.org/1999/xhtml';
   function createElementNS(namespace, tag, typeExtension) {
     if (namespace === HTML_NAMESPACE) {
       return createElement(tag, typeExtension);
@@ -2291,11 +2301,11 @@ window.CustomElements.addModule(function(scope) {
     var element;
     if (typeExtension) {
       element = createElement(tag);
-      element.setAttribute("is", typeExtension);
+      Polymer.dom(element).setAttribute('is', typeExtension);
       return element;
     }
     element = domCreateElement(tag);
-    if (tag.indexOf("-") >= 0) {
+    if (tag.indexOf('-') >= 0) {
       implementPrototype(element, HTMLElement);
     }
     return element;
@@ -2304,7 +2314,7 @@ window.CustomElements.addModule(function(scope) {
   var domCreateElementNS = document.createElementNS.bind(document);
   var isInstance;
   if (!Object.__proto__ && !useNative) {
-    isInstance = function(obj, ctor) {
+    isInstance = function (obj, ctor) {
       if (obj instanceof ctor) {
         return true;
       }
@@ -2318,34 +2328,34 @@ window.CustomElements.addModule(function(scope) {
       return false;
     };
   } else {
-    isInstance = function(obj, base) {
+    isInstance = function (obj, base) {
       return obj instanceof base;
     };
   }
   function wrapDomMethodToForceUpgrade(obj, methodName) {
     var orig = obj[methodName];
-    obj[methodName] = function() {
+    obj[methodName] = function () {
       var n = orig.apply(this, arguments);
       upgradeAll(n);
       return n;
     };
   }
-  wrapDomMethodToForceUpgrade(Node.prototype, "cloneNode");
-  wrapDomMethodToForceUpgrade(document, "importNode");
+  wrapDomMethodToForceUpgrade(Node.prototype, 'cloneNode');
+  wrapDomMethodToForceUpgrade(document, 'importNode');
   if (isIE) {
-    (function() {
+    (function () {
       var importNode = document.importNode;
-      document.importNode = function() {
+      document.importNode = function () {
         var n = importNode.apply(document, arguments);
         if (n.nodeType == n.DOCUMENT_FRAGMENT_NODE) {
           var f = document.createDocumentFragment();
-          f.appendChild(n);
+          Polymer.dom(f).appendChild(n);
           return f;
         } else {
           return n;
         }
       };
-    })();
+    }());
   }
   document.registerElement = register;
   document.createElement = createElement;
@@ -2356,20 +2366,20 @@ window.CustomElements.addModule(function(scope) {
   scope.getRegisteredDefinition = getRegisteredDefinition;
   document.register = document.registerElement;
 });
-
-(function(scope) {
+(function (scope) {
   var useNative = scope.useNative;
   var initializeModules = scope.initializeModules;
   var isIE = scope.isIE;
   if (useNative) {
-    var nop = function() {};
+    var nop = function () {
+    };
     scope.watchShadow = nop;
     scope.upgrade = nop;
     scope.upgradeAll = nop;
     scope.upgradeDocumentTree = nop;
     scope.upgradeSubtree = nop;
     scope.takeRecords = nop;
-    scope.instanceof = function(obj, base) {
+    scope.instanceof = function (obj, base) {
       return obj instanceof base;
     };
   } else {
@@ -2382,13 +2392,13 @@ window.CustomElements.addModule(function(scope) {
       window.wrap = window.ShadowDOMPolyfill.wrapIfNeeded;
       window.unwrap = window.ShadowDOMPolyfill.unwrapIfNeeded;
     } else {
-      window.wrap = window.unwrap = function(node) {
+      window.wrap = window.unwrap = function (node) {
         return node;
       };
     }
   }
   if (window.HTMLImports) {
-    window.HTMLImports.__importsParsingHook = function(elt) {
+    window.HTMLImports.__importsParsingHook = function (elt) {
       if (elt.import) {
         upgradeDocument(wrap(elt.import));
       }
@@ -2397,34 +2407,31 @@ window.CustomElements.addModule(function(scope) {
   function bootstrap() {
     upgradeDocumentTree(window.wrap(document));
     window.CustomElements.ready = true;
-    var requestAnimationFrame = window.requestAnimationFrame || function(f) {
+    var requestAnimationFrame = window.requestAnimationFrame || function (f) {
       setTimeout(f, 16);
     };
-    requestAnimationFrame(function() {
-      setTimeout(function() {
+    requestAnimationFrame(function () {
+      setTimeout(function () {
         window.CustomElements.readyTime = Date.now();
         if (window.HTMLImports) {
           window.CustomElements.elapsed = window.CustomElements.readyTime - window.HTMLImports.readyTime;
         }
-        document.dispatchEvent(new CustomEvent("WebComponentsReady", {
-          bubbles: true
-        }));
+        document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
       });
     });
   }
-  if (document.readyState === "complete" || scope.flags.eager) {
+  if (document.readyState === 'complete' || scope.flags.eager) {
     bootstrap();
-  } else if (document.readyState === "interactive" && !window.attachEvent && (!window.HTMLImports || window.HTMLImports.ready)) {
+  } else if (document.readyState === 'interactive' && !window.attachEvent && (!window.HTMLImports || window.HTMLImports.ready)) {
     bootstrap();
   } else {
-    var loadEvent = window.HTMLImports && !window.HTMLImports.ready ? "HTMLImportsLoaded" : "DOMContentLoaded";
+    var loadEvent = window.HTMLImports && !window.HTMLImports.ready ? 'HTMLImportsLoaded' : 'DOMContentLoaded';
     window.addEventListener(loadEvent, bootstrap);
   }
-})(window.CustomElements);
-
-(function(scope) {
-  var style = document.createElement("style");
-  style.textContent = "" + "body {" + "transition: opacity ease-in 0.2s;" + " } \n" + "body[unresolved] {" + "opacity: 0; display: block; overflow: hidden; position: relative;" + " } \n";
-  var head = document.querySelector("head");
-  head.insertBefore(style, head.firstChild);
-})(window.WebComponents);
+}(window.CustomElements));
+(function (scope) {
+  var style = document.createElement('style');
+  Polymer.dom(style).textContent = '' + 'body {' + 'transition: opacity ease-in 0.2s;' + ' } \n' + 'body[unresolved] {' + 'opacity: 0; display: block; overflow: hidden; position: relative;' + ' } \n';
+  var head = Polymer.dom(document).querySelector('head');
+  Polymer.dom(head).insertBefore(style, Polymer.dom(head).firstChild);
+}(window.WebComponents));

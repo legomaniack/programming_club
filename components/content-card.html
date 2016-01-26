@@ -1,15 +1,31 @@
-<link rel="import"
-  href="../bower_components/polymer/polymer.html">
-<link rel="import"
-  href="../bower_components/paper-shadow/paper-shadow.html">
-<link rel="import"
-  href="../bower_components/core-icons/image-icons.html">
-<link rel="import"
-  href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<polymer-element name="content-card" attributes="img postId">
-	<template>
-		<style>
+  <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<dom-module id="content-card">
+  <style>
+    /* TODO(polyup): For speed, consider reworking these styles with .classes
+                     and #ids rather than [attributes].
+    */
+    [layout] {
+      @apply(--layout);
+    }
+    [layout][vertical] {
+      @apply(--layout-vertical);
+    }
+    [layout][start-justified] {
+      @apply(--layout-start-justified);
+    }
+    [layout][horizontal] {
+      @apply(--layout-horizontal);
+    }
+    [layout][end-justified] {
+      @apply(--layout-end-justified);
+    }
+  </style>
+  <style>
 			:host {
 				display: block;
 				position: relative;
@@ -49,25 +65,41 @@
 			}
 			
 		</style>
-		<core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
-		<paper-shadow z="1" id="card-shadow">
-			<div class="card-content" vertical layout start-justified>
+  <template>
+		<iron-media-query query="max-width: 640px" query-matches="{{phoneScreen}}"></iron-media-query>
+		<paper-material elevation="1" id="card-shadow">
+			<div class="card-content" vertical="" layout="" start-justified="">
 				<content select="h2"></content>
-				<div class='media' hidden?="{{img == ''}}" 
-					style="background-image:url({{img}})">
+				<div class="media" hidden$="{{_computeHidden(img)}}" style$="{{_computeStyle(img)}}">
 				</div>
 				<content select="p"></content>
-				<div class="actions" layout horizontal end-justified>
+				<div class="actions" layout="" horizontal="" end-justified="">
 					<paper-icon-button icon="image:edit"></paper-icon-button>
 				</div>
 			</div>
-		</paper-shadow>
+		</paper-material>
 	</template>
-	<script>
-		Polymer({
-			postId: 0,
-			img: ""
-		});
-	</script>
-  
-</polymer-element>
+  <script>
+    Polymer({
+      is: 'content-card',
+      properties: {
+        img: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        postId: {
+          type: Number,
+          value: 0,
+          notify: true
+        }
+      },
+      _computeHidden: function (img) {
+        return img == '';
+      },
+      _computeStyle: function (img) {
+        return 'background-image:url(' + img + ')';
+      }
+    });
+  </script>
+</dom-module>

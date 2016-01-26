@@ -1,50 +1,71 @@
-<link rel="import" 
-  href="../bower_components/polymer/polymer.html">
-<link rel="import" 
-  href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
 
-<polymer-element name="card-service" attributes="type cols colNum">
-	<template>
-		<style>
+<dom-module id="card-service">
+  <style>
 			:host {
 				display: none;
 			}
 		</style>
-		<core-ajax id="ajax"
-			auto
-			url="./php/getData.php?type={{type}}"
-			on-core-response="{{cardsLoaded}}"
-			handleAs="json">
-		</core-ajax>
+  <template>
+		<iron-ajax id="ajax" auto="" url="{{_computeUrl(type)}}" on-core-response="cardsLoaded" handle-as="json">
+		</iron-ajax>
 	</template>
-	<script>
-		Polymer({
-			cards: [],
-			colNum: 1,
-			type: "projects",
-			cols: [],
-			ready: function () {
-				this.calculateColumns();
-			},
-			colNumChanged: function() { //Recalculate columns on change
-				this.calculateColumns(); 
-			},
-			cardsLoaded: function() {
-				this.cards = this.$.ajax.response.slice(0);
-				console.log(this.$.ajax.response.slice(0));
-				this.calculateColumns();
-			},
-			calculateColumns : function() {
-				cols = []
-				for (var i=0; i < this.colNum; i++) {
-					cols.push([]);
-				}
-				for (var i=0; i < this.cards.length; i++) {
-					cols[i % this.colNum].push(this.cards[i]);
-				}
-				this.cols = cols;
-			}
-		});
-	</script>
-</polymer-element>
+  <script>
+    Polymer({
+      is: 'card-service',
+      properties: {
+        cards: {
+          type: Array,
+          value: function () {
+            return [];
+          }
+        },
+        colNum: {
+          type: Number,
+          value: 1,
+          notify: true,
+          observer: 'colNumChanged'
+        },
+        cols: {
+          type: Array,
+          value: function () {
+            return [];
+          },
+          notify: true
+        },
+        type: {
+          type: String,
+          value: 'projects',
+          notify: true
+        }
+      },
+      ready: function () {
+        this.calculateColumns();
+      },
+      colNumChanged: function () {
+        //Recalculate columns on change
+        this.calculateColumns();
+      },
+      cardsLoaded: function () {
+        this.cards = this.$.ajax.response.slice(0);
+        console.log(this.$.ajax.response.slice(0));
+        this.calculateColumns();
+      },
+      calculateColumns: function () {
+        cols = [];
+        for (var i = 0; i < this.colNum; i++) {
+          cols.push([]);
+        }
+        for (var i = 0; i < this.cards.length; i++) {
+          cols[i % this.colNum].push(this.cards[i]);
+        }
+        this.cols = cols;
+      },
+      _computeUrl: function (type) {
+        return './php/getData.php?type=' + type;
+      }
+    });
+  </script>
+</dom-module>

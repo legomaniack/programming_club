@@ -1,14 +1,34 @@
-<link rel="import"
-  href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
   
-<link rel="import"
-  href="../components/content-card.html">
-<link rel="import"
-  href="../components/card-service.html">
+<link rel="import" href="../components/content-card.html">
+<link rel="import" href="../components/card-service.html">
   
-<polymer-element name="card-layout" attributes="type">
-	<template>
-		<style>
+  <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<dom-module id="card-layout">
+  <style>
+    /* TODO(polyup): For speed, consider reworking these styles with .classes
+                     and #ids rather than [attributes].
+    */
+    [layout] {
+      @apply(--layout);
+    }
+    [layout][horizontal] {
+      @apply(--layout-horizontal);
+    }
+    [layout][start] {
+      @apply(--layout-start);
+    }
+    [layout][around-justified] {
+      @apply(--layout-around-justified);
+    }
+    [layout][vertical] {
+      @apply(--layout-vertical);
+    }
+    [layout][flex] {
+      @apply(--layout-flex);
+    }
+  </style>
+  <style>
 			:host {
 				display: block;
 			}
@@ -24,16 +44,15 @@
 				width: 100%;
 			}
 		</style>
+  <template>
 		
-		<card-service id="service" type="{{type}}" cols="{{cols}}" colNum="{{columns}}"></card-service>
+		<card-service id="service" type="{{type}}" cols="{{cols}}" colnum="{{columns}}"></card-service>
 		
-		<div class="content" layout start around-justified horizontal> 
-			<template repeat="{{col in cols}}">
-				<div layout vertical flex class="column">
-				<template repeat="{{card in col}}">
-					<content-card
-					img={{card.img}}
-					postId={{card.id}}>
+		<div class="content" layout="" start="" around-justified="" horizontal=""> 
+			<template is="dom-repeat" items="{{cols}}" as="col">
+				<div layout="" vertical="" flex="" class="column">
+				<template is="dom-repeat" items="{{col}}" as="card">
+					<content-card img="{{card.img}}" postid="{{card.id}}">
 						<h2>{{card.title}}</h2>
 						<p>{{card.text}}</p>
 					</content-card>
@@ -42,24 +61,38 @@
 			</template>
 		</div>
 	</template>
-	<script>
-		Polymer('card-layout', {
-			columnWidth: 450,
-			columnPadding: 30,
-			type: "projects",
-			ready: function () {
-				this.columns = Math.max(1,Math.floor(this.clientWidth/(this.columnWidth +(2 * this.columnPadding))));
-				this.setAttribute('unresolved', '');
-				layout = this;
-				window.addEventListener('resize', function () {
-					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
-				});
-				window.addEventListener("polymer-ready", function() { //Ensure that columns are calculated
-					layout.columns = Math.max(1,Math.floor(layout.clientWidth/(layout.columnWidth +( 2 * layout.columnPadding))));
-					layout.setAttribute('resolved', '');
-					layout.removeAttribute('unresolved');
-				});
-			}
-		});
-	</script>
-</polymer-element>
+  <script>
+    Polymer({
+      is: 'card-layout',
+      properties: {
+        columnPadding: {
+          type: Number,
+          value: 30
+        },
+        columnWidth: {
+          type: Number,
+          value: 450
+        },
+        type: {
+          type: String,
+          value: 'projects',
+          notify: true
+        }
+      },
+      ready: function () {
+        this.columns = Math.max(1, Math.floor(this.clientWidth / (this.columnWidth + 2 * this.columnPadding)));
+        Polymer.dom(this).setAttribute('unresolved', '');
+        layout = this;
+        window.addEventListener('resize', function () {
+          layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+        });
+        window.addEventListener('polymer-ready', function () {
+          //Ensure that columns are calculated
+          layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+          Polymer.dom(layout).setAttribute('resolved', '');
+          Polymer.dom(layout).removeAttribute('unresolved');
+        });
+      }
+    });
+  </script>
+</dom-module>

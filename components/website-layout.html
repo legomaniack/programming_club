@@ -1,25 +1,16 @@
 <link rel="import" href="../bower_components/font-roboto/roboto.html">
-<link rel="import"
-  href="../bower_components/polymer/polymer.html">
-<link rel="import"
-  href="../bower_components/core-header-panel/core-header-panel.html">
-<link rel="import"
-  href="../bower_components/core-toolbar/core-toolbar.html">
-<link rel="import"
-  href="../bower_components/core-drawer-panel/core-drawer-panel.html">
-<link rel="import"
-  href="../bower_components/core-icons/core-icons.html">
-<link rel="import"
-  href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import"
-  href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
   
-<link rel="import"
-  href="../components/sidebar-content.html">
+<link rel="import" href="../components/sidebar-content.html">
 
-<polymer-element name="website-layout" attributes="pageTitle pageId color">
-	<template>
-		<style>
+<dom-module id="website-layout">
+  <style>
 			:host{
 				height: 100%;
 				margin: 0;
@@ -39,41 +30,56 @@
 				width: 100%;
 			}
 		</style>
-		<core-drawer-panel forceNarrow>
-			<sidebar-content drawer pageId={{pageId}}></sidebar-content>
-			<core-header-panel main>
-				<core-toolbar>
-					<paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
-					<span flex>{{pageTitle}}</span>
+  <template>
+		<paper-drawer-panel force-narrow="">
+			<sidebar-content drawer="" pageid="{{pageId}}"></sidebar-content>
+			<paper-header-panel main="">
+				<paper-toolbar>
+					<paper-icon-button icon="menu" core-drawer-toggle=""></paper-icon-button>
+					<span flex="">{{pageTitle}}</span>
 					<!--<google-signin clientId="351051375906-sjdenp8semduahev9m4q8v2quka5rrco.apps.googleusercontent.com" 
 					  layout self-end-justify></google-signin>-->
-				</core-toolbar>
+				</paper-toolbar>
 				<div class="content">
 					<content></content>
 				<div>
-			</core-header-panel>
-		</core-drawer-panel>
-	</template>
-	<script>
-		Polymer({
-			pageId: 0,
-			pageTitle: "Home",
-			color: "#EEEEEE"
-		});
+			
 		
-		function signinCallback(authResult) {
-		  if (authResult['status']['signed_in']) {
-			// Update the app to reflect a signed in user
-			// Hide the sign-in button now that the user is authorized, for example:
-			document.getElementById('signinButton').setAttribute('style', 'display: none');
-		  } else {
-			// Update the app to reflect a signed out user
-			// Possible error values:
-			//   "user_signed_out" - User is signed-out
-			//   "access_denied" - User denied access to your app
-			//   "immediate_failed" - Could not automatically log in the user
-			console.log('Sign-in state: ' + authResult['error']);
-		  }
-		}
-	</script>
-</polymer-element>
+	</div></div></paper-header-panel></paper-drawer-panel></template>
+  <script>
+    Polymer({
+      is: 'website-layout',
+      properties: {
+        color: {
+          type: String,
+          value: '#EEEEEE',
+          notify: true
+        },
+        pageId: {
+          type: Number,
+          value: 0,
+          notify: true
+        },
+        pageTitle: {
+          type: String,
+          value: 'Home',
+          notify: true
+        }
+      }
+    });
+    function signinCallback(authResult) {
+      if (authResult['status']['signed_in']) {
+        // Update the app to reflect a signed in user
+        // Hide the sign-in button now that the user is authorized, for example:
+        Polymer.dom(document.getElementById('signinButton')).setAttribute('style', 'display: none');
+      } else {
+        // Update the app to reflect a signed out user
+        // Possible error values:
+        //   "user_signed_out" - User is signed-out
+        //   "access_denied" - User denied access to your app
+        //   "immediate_failed" - Could not automatically log in the user
+        console.log('Sign-in state: ' + authResult['error']);
+      }
+    }
+  </script>
+</dom-module>
