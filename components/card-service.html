@@ -3,16 +3,17 @@
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
 
 <dom-module id="card-service">
-  <style>
-			:host {
-				display: none;
-			}
-		</style>
-  <template>
-		<iron-ajax id="ajax" auto="" url="{{_computeUrl(type)}}" on-core-response="cardsLoaded" handle-as="json">
-		</iron-ajax>
-	</template>
-  <script>
+<template>
+	<style>
+		:host {
+			display: none;
+		}
+	</style>
+  
+	<iron-ajax id="ajax" auto="" url="{{_computeUrl(type)}}" on-core-response="cardsLoaded" handle-as="json">
+	</iron-ajax>
+</template>
+<script>
     Polymer({
       is: 'card-service',
       properties: {
@@ -67,5 +68,5 @@
         return './php/getData.php?type=' + type;
       }
     });
-  </script>
+</script>
 </dom-module>

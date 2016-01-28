@@ -1,85 +1,66 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
   <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <dom-module id="content-card">
-  <style>
-    /* TODO(polyup): For speed, consider reworking these styles with .classes
-                     and #ids rather than [attributes].
-    */
-    [layout] {
-      @apply(--layout);
-    }
-    [layout][vertical] {
-      @apply(--layout-vertical);
-    }
-    [layout][start-justified] {
-      @apply(--layout-start-justified);
-    }
-    [layout][horizontal] {
-      @apply(--layout-horizontal);
-    }
-    [layout][end-justified] {
-      @apply(--layout-end-justified);
-    }
-  </style>
-  <style>
-			:host {
-				display: block;
-				position: relative;
-				background-color: #FAFAFA;
-				padding: 0px;
-				corner-radius: 2px;
-				width:100%;
-				margin:0;
-			}
-			
-			polyfill-next-selector { content: 'content-card h2'; }
-			::content h2 {
-				margin:0;
-				padding: 24px 16px 16px 16px;
-				font-size: 24px;
-				font-weight: normal;
-			}
-		
-			.media {
-				position: relative;
-				width: 100%;
-				padding-bottom: 56.25%; //Maintain 16:9 aspect ratio;
-				background-size: cover;
-			}
-			
-			polyfill-next-selector { content: 'content-card p'; }
-			::content p {
-				margin:0;
-				padding: 16px;
-				font-size: 14px;
-				font-weight: normal;
-				line-height: 1.8;
-			}
-			
-			.actions {
-				padding: 8px;
-			}
-			
-		</style>
-  <template>
-		<iron-media-query query="max-width: 640px" query-matches="{{phoneScreen}}"></iron-media-query>
-		<paper-material elevation="1" id="card-shadow">
-			<div class="card-content" vertical="" layout="" start-justified="">
-				<content select="h2"></content>
-				<div class="media" hidden$="{{_computeHidden(img)}}" style$="{{_computeStyle(img)}}">
-				</div>
-				<content select="p"></content>
-				<div class="actions" layout="" horizontal="" end-justified="">
-					<paper-icon-button icon="image:edit"></paper-icon-button>
-				</div>
+<template>
+	<style>
+		:host {
+			display: block;
+			position: relative;
+			background-color: #FAFAFA;
+			padding: 0px;
+			corner-radius: 2px;
+			width:100%;
+			margin:0;
+		}
+
+		polyfill-next-selector { content: 'content-card h2'; }
+		::content h2 {
+			margin:0;
+			padding: 24px 16px 16px 16px;
+			font-size: 24px;
+			font-weight: normal;
+		}
+
+		.media {
+			position: relative;
+			width: 100%;
+			padding-bottom: 56.25%; //Maintain 16:9 aspect ratio;
+			background-size: cover;
+		}
+
+		polyfill-next-selector { content: 'content-card p'; }
+		::content p {
+			margin:0;
+			padding: 16px;
+			font-size: 14px;
+			font-weight: normal;
+			line-height: 1.8;
+		}
+
+		.actions {
+			padding: 8px;
+		}
+	</style>
+
+	<iron-media-query query="max-width: 640px" query-matches="{{phoneScreen}}"></iron-media-query>
+	<paper-material elevation="1" id="card-shadow">
+		<div class="card-content vertical layout start-justified">
+			<content select="h2"></content>
+			<div class="media" hidden$="{{_computeHidden(img)}}" style$="{{_computeStyle(img)}}">
 			</div>
-		</paper-material>
-	</template>
-  <script>
+			<content select="p"></content>
+			<div class="actions layout horizontal end-justified">
+				<paper-icon-button icon="image:edit"></paper-icon-button>
+			</div>
+		</div>
+	</paper-material>
+
+</template>
+<script>
     Polymer({
       is: 'content-card',
       properties: {
@@ -101,5 +82,5 @@
         return 'background-image:url(' + img + ')';
       }
     });
-  </script>
+</script>
 </dom-module>

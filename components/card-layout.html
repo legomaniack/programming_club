@@ -3,64 +3,45 @@
 <link rel="import" href="../components/content-card.html">
 <link rel="import" href="../components/card-service.html">
   
-  <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 <dom-module id="card-layout">
-  <style>
-    /* TODO(polyup): For speed, consider reworking these styles with .classes
-                     and #ids rather than [attributes].
-    */
-    [layout] {
-      @apply(--layout);
-    }
-    [layout][horizontal] {
-      @apply(--layout-horizontal);
-    }
-    [layout][start] {
-      @apply(--layout-start);
-    }
-    [layout][around-justified] {
-      @apply(--layout-around-justified);
-    }
-    [layout][vertical] {
-      @apply(--layout-vertical);
-    }
-    [layout][flex] {
-      @apply(--layout-flex);
-    }
-  </style>
-  <style>
-			:host {
-				display: block;
-			}
-			.content {
-				width: 100%;
-			}
-			.column {
-				padding: {{columnPadding}}px;
-				max-width: {{columnWidth}}px;
-			}
-			content-card {
-				margin-bottom: 20px;
-				width: 100%;
-			}
-		</style>
-  <template>
+<template>
+  
+	<style>
+		:host {
+			display: block;
+		}
+		.content {
+			width: 100%;
+		}
+		.column {
+			padding: {{columnPadding}}px;
+			max-width: {{columnWidth}}px;
+		}
+		content-card {
+			margin-bottom: 20px;
+			width: 100%;
+		}
+	</style>
+
 		
-		<card-service id="service" type="{{type}}" cols="{{cols}}" colnum="{{columns}}"></card-service>
-		
-		<div class="content" layout="" start="" around-justified="" horizontal=""> 
-			<template is="dom-repeat" items="{{cols}}" as="col">
-				<div layout="" vertical="" flex="" class="column">
-				<template is="dom-repeat" items="{{col}}" as="card">
-					<content-card img="{{card.img}}" postid="{{card.id}}">
-						<h2>{{card.title}}</h2>
-						<p>{{card.text}}</p>
-					</content-card>
-				</template>
-				</div>
+	<card-service id="service" type="{{type}}" cols="{{cols}}" colnum="{{columns}}"></card-service>
+	
+	<div class="content layout start around-justified horizontal"> 
+		<template is="dom-repeat" items="{{cols}}" as="col">
+			<div class="layout vertical flex column">
+			<template is="dom-repeat" items="{{col}}" as="card">
+				<content-card img="{{card.img}}" postid="{{card.id}}">
+					<h2>{{card.title}}</h2>
+					<p>{{card.text}}</p>
+				</content-card>
 			</template>
-		</div>
-	</template>
+			</div>
+		</template>
+	</div>
+
+</template>
   <script>
     Polymer({
       is: 'card-layout',

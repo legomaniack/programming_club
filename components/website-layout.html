@@ -10,76 +10,77 @@
 <link rel="import" href="../components/sidebar-content.html">
 
 <dom-module id="website-layout">
-  <style>
-			:host{
-				height: 100%;
-				margin: 0;
-				font-family: 'Roboto', sans-serif;
-			}
-			core-header-panel {
-				height: 100%;
-				background: {{color}};
-				overflow: auto;
-				-webkit-overflow-scrolling: touch; 
-			}
-			core-toolbar {
-			  background: #FF9800;
-			  color: white;
-			}
-			.content {
-				width: 100%;
-			}
-		</style>
-  <template>
-		<paper-drawer-panel force-narrow="">
-			<sidebar-content drawer="" pageid="{{pageId}}"></sidebar-content>
-			<paper-header-panel main="">
-				<paper-toolbar>
-					<paper-icon-button icon="menu" core-drawer-toggle=""></paper-icon-button>
-					<span flex="">{{pageTitle}}</span>
-					<!--<google-signin clientId="351051375906-sjdenp8semduahev9m4q8v2quka5rrco.apps.googleusercontent.com" 
-					  layout self-end-justify></google-signin>-->
-				</paper-toolbar>
-				<div class="content">
-					<content></content>
-				<div>
-			
-		
-	</div></div></paper-header-panel></paper-drawer-panel></template>
-  <script>
-    Polymer({
-      is: 'website-layout',
-      properties: {
-        color: {
-          type: String,
-          value: '#EEEEEE',
-          notify: true
-        },
-        pageId: {
-          type: Number,
-          value: 0,
-          notify: true
-        },
-        pageTitle: {
-          type: String,
-          value: 'Home',
-          notify: true
-        }
-      }
-    });
-    function signinCallback(authResult) {
-      if (authResult['status']['signed_in']) {
-        // Update the app to reflect a signed in user
-        // Hide the sign-in button now that the user is authorized, for example:
-        Polymer.dom(document.getElementById('signinButton')).setAttribute('style', 'display: none');
-      } else {
-        // Update the app to reflect a signed out user
-        // Possible error values:
-        //   "user_signed_out" - User is signed-out
-        //   "access_denied" - User denied access to your app
-        //   "immediate_failed" - Could not automatically log in the user
-        console.log('Sign-in state: ' + authResult['error']);
-      }
-    }
-  </script>
+
+<template>
+
+	<style>
+		:host{
+			height: 100%;
+			margin: 0;
+			font-family: 'Roboto', sans-serif;
+		}
+		paper-header-panel {
+			height: 100%;
+			background: {{color}};
+			overflow: auto;
+			-webkit-overflow-scrolling: touch; 
+		}
+		paper-toolbar {
+		  background: #FF9800;
+		  color: white;
+		}
+		.content {
+			width: 100%;
+		}
+	</style>
+
+	<paper-drawer-panel force-narrow>
+		<sidebar-content drawer pageid="{{pageId}}"></sidebar-content>
+		<paper-header-panel main>
+			<paper-toolbar>
+				<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+				<span class="flex">{{pageTitle}}</span>
+			</paper-toolbar>
+			<div class="content">
+				<content></content>
+			</div>
+		</paper-header-panel>
+	</paper-drawer-panel>
+</template>
+<script>
+	Polymer({
+	  is: 'website-layout',
+	  properties: {
+		color: {
+		  type: String,
+		  value: '#EEEEEE',
+		  notify: true
+		},
+		pageId: {
+		  type: Number,
+		  value: 0,
+		  notify: true
+		},
+		pageTitle: {
+		  type: String,
+		  value: 'Home',
+		  notify: true
+		}
+	  }
+	});
+	function signinCallback(authResult) {
+	  if (authResult['status']['signed_in']) {
+		// Update the app to reflect a signed in user
+		// Hide the sign-in button now that the user is authorized, for example:
+		Polymer.dom(document.getElementById('signinButton')).setAttribute('style', 'display: none');
+	  } else {
+		// Update the app to reflect a signed out user
+		// Possible error values:
+		//   "user_signed_out" - User is signed-out
+		//   "access_denied" - User denied access to your app
+		//   "immediate_failed" - Could not automatically log in the user
+		console.log('Sign-in state: ' + authResult['error']);
+	  }
+	}
+</script>
 </dom-module>

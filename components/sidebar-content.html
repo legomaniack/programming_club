@@ -4,96 +4,79 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
-  
-  <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 <dom-module id="sidebar-content">
-  <style>
-    /* TODO(polyup): For speed, consider reworking these styles with .classes
-                     and #ids rather than [attributes].
-    */
-    [layout] {
-      @apply(--layout);
-    }
-    [layout][horizontal] {
-      @apply(--layout-horizontal);
-    }
-    [layout][center] {
-      @apply(--layout-center);
-    }
-  </style>
-  <style>
-			:host {
-				background: #FAFAFA;
-				padding: 0;
-				margin: 0;
-			}
-			core-header-panel {
-				height: 100%;
-				overflow: auto;
-				-webkit-overflow-scrolling: touch; 
-			}
-			core-toolbar {
-				background: #FF9800;
-				color: white;
-			}
-			paper-item {
-				padding: 0;
-			}
-			a {
-				text-decoration: none;
-				color: black;
-				padding: 0;
-			}
-			.core-selected div{
-				color: #448AFF;
-			}
-		</style>
-  <template>
-		<paper-header-panel>
-			<paper-toolbar>
-				<div>Navigation</div>
-			</paper-toolbar>
-			<paper-menu selected="{{pageId}}">
-				<template is="dom-repeat" items="{{pages}}" as="page">
-					<a href$="{{page.url}}">
-						<paper-item noink="">
-							<div layout="" horizontal="" center="">{{page.title}}</div>
-						</paper-item>
-					</a>
-					
-				</template>
-			</paper-menu>
-		</paper-header-panel>
-	</template>
-  <script>
-    Polymer({
-      is: 'sidebar-content',
-      properties: {
-        pageId: {
-          type: String,
-          value: '0',
-          notify: true
-        },
-        pages: {
-          type: Array,
-          value: function () {
-            return [
-              {
-                title: 'Home',
-                url: '/'
-              },
-              {
-                title: 'Projects',
-                url: 'projects'
-              },
-              {
-                title: 'Blog',
-                url: 'blog'
-              }
-            ];
-          }
-        }
-      }
-    });
-  </script>
+<template>	
+	<style>
+		:host {
+			background: #FAFAFA;
+			padding: 0;
+			margin: 0;
+		}
+		paper-header-panel {
+			height: 100%;
+			overflow: auto;
+			-webkit-overflow-scrolling: touch; 
+		}
+		paper-toolbar {
+			background: #FF9800;
+			color: white;
+		}
+		a {
+			text-decoration: none;
+			color: black;
+			padding: 0;
+		}
+		.iron-selected div{
+			color: #448AFF;
+		}
+	</style>
+
+	<paper-header-panel>
+		<paper-toolbar>
+			<div>Navigation</div>
+		</paper-toolbar>
+		<paper-menu selected="{{pageId}}">
+			<template is="dom-repeat" items="{{pages}}" as="page">
+				<a href$="{{page.url}}">
+					<paper-item role="menuitem">
+						<div calss="layout horizontal center">{{page.title}}</div>
+					</paper-item>
+				</a>
+			</template>
+		</paper-menu>
+	</paper-header-panel>
+
+</template>
+<script>
+	Polymer({
+			is: 'sidebar-content',
+			properties: {
+			pageId: {
+				type: String,
+				value: '0',
+				notify: true
+		},
+		pages: {
+			type: Array,
+			value: function () {
+			return [
+					{
+						title: 'Home',
+						url: 'index.html'
+					},
+					{
+						title: 'Projects',
+						url: 'projects.html'
+					},
+					{
+						title: 'Blog',
+						url: 'blog.html'
+					}
+			];}
+		}
+	  }
+	});
+</script>
 </dom-module>
