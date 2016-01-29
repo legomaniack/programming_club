@@ -10,7 +10,10 @@
 		}
 	</style>
   
-	<iron-ajax id="ajax" auto="" url="{{_computeUrl(type)}}" on-core-response="cardsLoaded" handle-as="json">
+	<iron-ajax id="ajax" auto 
+		url="{{_computeUrl(type)}}" 
+		on-response="cardsLoaded" 
+		handle-as="json">
 	</iron-ajax>
 </template>
 <script>
@@ -48,13 +51,15 @@
       colNumChanged: function () {
         //Recalculate columns on change
         this.calculateColumns();
+		console.log("ColNumChanged");
       },
       cardsLoaded: function () {
-        this.cards = this.$.ajax.response.slice(0);
-        console.log(this.$.ajax.response.slice(0));
+        this.cards = this.$.ajax.lastResponse.slice(0);
+        console.log(this.$.ajax.lastResponse.slice(0));
         this.calculateColumns();
       },
       calculateColumns: function () {
+		console.log("c:"+this.colNum);
         cols = [];
         for (var i = 0; i < this.colNum; i++) {
           cols.push([]);
@@ -63,6 +68,7 @@
           cols[i % this.colNum].push(this.cards[i]);
         }
         this.cols = cols;
+		console.log(this.cols)
       },
       _computeUrl: function (type) {
         return './php/getData.php?type=' + type;

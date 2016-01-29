@@ -16,8 +16,8 @@
 			width: 100%;
 		}
 		.column {
-			padding: {{columnPadding}}px;
-			max-width: {{columnWidth}}px;
+			padding: 30px; 
+			max-width: 450px;
 		}
 		content-card {
 			margin-bottom: 20px;
@@ -26,8 +26,8 @@
 	</style>
 
 		
-	<card-service id="service" type="{{type}}" cols="{{cols}}" colnum="{{columns}}"></card-service>
-	
+	<card-service id="service" type="{{type}}" cols="{{cols}}" colNum="{{columns}}"></card-service>
+	<p>{{columns}}</p>
 	<div class="content layout start around-justified horizontal"> 
 		<template is="dom-repeat" items="{{cols}}" as="col">
 			<div class="layout vertical flex column">
@@ -54,25 +54,35 @@
           type: Number,
           value: 450
         },
+		columns: {
+			type: Number,
+			value: 1
+		},
         type: {
           type: String,
           value: 'projects',
           notify: true
         }
       },
-      ready: function () {
-        this.columns = Math.max(1, Math.floor(this.clientWidth / (this.columnWidth + 2 * this.columnPadding)));
-        Polymer.dom(this).setAttribute('unresolved', '');
-        layout = this;
+      attached: function () { // DO NOT TOUCH
+		layout = this;
+        this.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+		Polymer.dom(this).setAttribute('unresolved', '');
         window.addEventListener('resize', function () {
           layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
-        });
+		  	layout.async(function () {
+		  	layout.$.service.colNum = layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+			});
+		});
         window.addEventListener('polymer-ready', function () {
           //Ensure that columns are calculated
           layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
           Polymer.dom(layout).setAttribute('resolved', '');
           Polymer.dom(layout).removeAttribute('unresolved');
         });
+		this.async(function () {
+		  this.$.service.colNum = layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+		});
       }
     });
   </script>
