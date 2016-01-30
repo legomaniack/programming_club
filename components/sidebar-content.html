@@ -37,7 +37,7 @@
 		<paper-toolbar>
 			<div>Navigation</div>
 		</paper-toolbar>
-		<paper-menu selected="{{pageId}}">
+		<paper-menu selected$="{{pageId}}">
 			<template is="dom-repeat" items="{{pages}}" as="page">
 				<a href$="{{page.url}}">
 					<paper-item role="menuitem">
@@ -56,7 +56,12 @@
 			pageId: {
 				type: String,
 				value: '0',
+				reflectToAttribute: true,
 				notify: true
+		},
+		ready: function () {
+			console.log("DIE");
+			console.log(pageId);
 		},
 		pages: {
 			type: Array,

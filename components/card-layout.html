@@ -26,8 +26,7 @@
 	</style>
 
 		
-	<card-service id="service" type="{{type}}" cols="{{cols}}" colNum="{{columns}}"></card-service>
-	<p>{{columns}}</p>
+	<card-service id="service" type="{{type}}" cols="{{cols}}" col-num="{{columns}}"></card-service>
 	<div class="content layout start around-justified horizontal"> 
 		<template is="dom-repeat" items="{{cols}}" as="col">
 			<div class="layout vertical flex column">
@@ -70,18 +69,6 @@
 		Polymer.dom(this).setAttribute('unresolved', '');
         window.addEventListener('resize', function () {
           layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
-		  	layout.async(function () {
-		  	layout.$.service.colNum = layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
-			});
-		});
-        window.addEventListener('polymer-ready', function () {
-          //Ensure that columns are calculated
-          layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
-          Polymer.dom(layout).setAttribute('resolved', '');
-          Polymer.dom(layout).removeAttribute('unresolved');
-        });
-		this.async(function () {
-		  this.$.service.colNum = layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
 		});
       }
     });
