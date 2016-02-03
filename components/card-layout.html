@@ -4,6 +4,12 @@
 <link rel="import" href="../components/card-service.html">
   
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 
 <dom-module id="card-layout">
 <template>
@@ -23,6 +29,17 @@
 			margin-bottom: 20px;
 			width: 100%;
 		}
+		paper-fab {
+			position: fixed;
+			bottom: 32px;
+			right: 	32px;
+			--paper-fab-background: #448AFF;
+			--paper-fab-keyboard-focus-background: #2979FF;
+		}
+		paper-dialog {
+			max-width: 600px;
+			width: calc(100% - 60px);	
+		}
 	</style>
 
 		
@@ -39,6 +56,18 @@
 			</div>
 		</template>
 	</div>
+
+	<paper-fab on-tap="fab" icon="add" title="add"></paper-fab>
+	<paper-dialog id="editdialog">
+		<h2>{{editorTitle}}</h2>
+		<paper-input value="{{editTitleValue::input}}" required="true" id="post-title" label="Title"></paper-input>
+		<paper-input value="{{editSrcValue::input}}" id="image-src" label="Image URL"></paper-input>
+		<paper-textarea value="{{editContentValue::input}}" required="true" id="post-body" label="Content"></paper-textarea>
+		<div class="buttons">
+			<paper-button dialog-dismiss>Cancel</paper-button>
+			<paper-button dialog-confirm on-tap="editAccept">Accept</paper-button>
+		</div>
+	</paper-dialog>
 
 </template>
   <script>
@@ -61,6 +90,11 @@
           type: String,
           value: 'projects',
           notify: true
+        },
+		editorTitle: {
+          type: String,
+          value: 'Create new Project',
+          notify: true
         }
       },
       attached: function () { // DO NOT TOUCH
@@ -70,7 +104,23 @@
         window.addEventListener('resize', function () {
           layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
 		});
-      }
+		this.$.editdialog.refit();
+		this.$.editdialog.addEventListener('iron-overlay-closed', function () {
+		  layout.clearEdit();
+		});
+      },
+	  fab: function () {
+		this.editorTitle = "Create New Project"
+		this.$.editdialog.open();
+	  },
+	  editAccept: function () {
+		
+	  },
+	  clearEdit: function () { // Call this when dialog is canceled
+		this.editTitleValue = "";
+		this.editSrcValue = "";
+		this.editContentValue = "";
+	  }
     });
   </script>
 </dom-module>
