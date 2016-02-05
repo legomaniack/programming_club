@@ -53,6 +53,7 @@
         this.calculateColumns();
       },
       cardsLoaded: function () {
+		//console.log(this.$.ajax.lastResponse)
         this.cards = this.$.ajax.lastResponse.slice(0);
         this.calculateColumns();
       },
@@ -66,6 +67,13 @@
         }
         this.cols = cols;
       },
+	  update: function () {
+		ajax = this.$.ajax;
+		setTimeout(function(){
+			console.log("Update");
+    		ajax.generateRequest();
+		}, 200);
+	  },
       _computeUrl: function (type) {
         return './php/getData.php?type=' + type;
       }

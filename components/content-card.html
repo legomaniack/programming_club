@@ -53,8 +53,9 @@
 			<div class="media" hidden$="{{_computeHidden(img)}}" style$="{{_computeStyle(img)}}">
 			</div>
 			<content select="p"></content>
-			<div class="actions layout horizontal end-justified">
-				<paper-icon-button icon="image:edit"></paper-icon-button>
+			<div class="actions layout horizontal end-justified" hidden$="{{_computeActions(type)}}">
+				<paper-icon-button on-tap="onDelete" icon="clear"></paper-icon-button>
+				<paper-icon-button on-tap="onEdit" icon="create"></paper-icon-button>
 			</div>
 		</div>
 	</paper-material>
@@ -73,14 +74,29 @@
           type: Number,
           value: 0,
           notify: true
-        }
+        },
+		type: {
+		  type: String,
+		  value: 'projects',
+		  notify: true
+		}
       },
+	  onEdit: function () {
+		this.fire('modify', {id: this.postId, mode: "edit"})
+		console.log("ID: "+this.postId)
+	  },
+	  onDelete: function () {
+		this.fire('modify', {id: this.postId, mode: "del"})
+	  },
       _computeHidden: function (img) {
         return img == '';
       },
       _computeStyle: function (img) {
         return 'background-image:url(' + img + ')';
-      }
+      },
+	  _computeActions: function (type) {
+		return (type == 'blog');
+	  }
     });
 </script>
 </dom-module>

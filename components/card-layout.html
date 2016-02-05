@@ -2,6 +2,7 @@
   
 <link rel="import" href="../components/content-card.html">
 <link rel="import" href="../components/card-service.html">
+<link rel="import" href="../components/post-service.html">
   
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
@@ -44,11 +45,13 @@
 
 		
 	<card-service id="service" type="{{type}}" cols="{{cols}}" col-num="{{columns}}"></card-service>
-	<div class="content layout start around-justified horizontal"> 
+	<post-service id="poster" type="{{type}}" mode="{{posterMode}}" post-id="{{posterId}}" title="{{posterTitle}}" img="{{posterImg}}" text="{{posterText}}"></post-service>	
+	
+	<div id="allcards" class="content layout start around-justified horizontal"> 
 		<template is="dom-repeat" items="{{cols}}" as="col">
 			<div class="layout vertical flex column">
 			<template is="dom-repeat" items="{{col}}" as="card">
-				<content-card img="{{card.img}}" postid="{{card.id}}">
+				<content-card type="{{type}}" img="{{card.img}}" post-id="{{card.id}}" id="card{{card.id}}" card="{{card}}">
 					<h2>{{card.title}}</h2>
 					<p>{{card.text}}</p>
 				</content-card>
@@ -60,12 +63,12 @@
 	<paper-fab on-tap="fab" icon="add" title="add"></paper-fab>
 	<paper-dialog id="editdialog">
 		<h2>{{editorTitle}}</h2>
-		<paper-input value="{{editTitleValue::input}}" required="true" id="post-title" label="Title"></paper-input>
-		<paper-input value="{{editSrcValue::input}}" id="image-src" label="Image URL"></paper-input>
-		<paper-textarea value="{{editContentValue::input}}" required="true" id="post-body" label="Content"></paper-textarea>
+		<paper-input value="{{editTitleValue::input}}" maxlength="30" error-message="Required" id="postTitle" on-keyup="checkTitleValid" label="Title"></paper-input>
+		<paper-input value="{{editSrcValue::input}}" maxlength="2048" id="imageSrc" label="Image URL"></paper-input>
+		<paper-textarea value="{{editContentValue::input}}" maxlength="240" charCounter error-message="Required" id="postBody" on-keyup="checkPostValid" label="Content"></paper-textarea>
 		<div class="buttons">
 			<paper-button dialog-dismiss>Cancel</paper-button>
-			<paper-button dialog-confirm on-tap="editAccept">Accept</paper-button>
+			<paper-button on-tap="editAccept">Accept</paper-button>
 		</div>
 	</paper-dialog>
 
@@ -95,7 +98,47 @@
           type: String,
           value: 'Create new Project',
           notify: true
-        }
+        },
+		editTitleValue: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		editSrcValue: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		editContentValue: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		posterTitle: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		posterImg: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		posterText: {
+          type: String,
+          value: '',
+          notify: true
+        },
+		posterMode: {
+          type: String,
+          value: 'new',
+          notify: true
+        },
+		posterId: {
+          type: Number,
+          value: 0,
+          notify: true
+        },
       },
       attached: function () { // DO NOT TOUCH
 		layout = this;
@@ -104,19 +147,53 @@
         window.addEventListener('resize', function () {
           layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
 		});
-		this.$.editdialog.refit();
 		this.$.editdialog.addEventListener('iron-overlay-closed', function () {
 		  layout.clearEdit();
 		});
+		this.querySelector('#allcards').addEventListener('modify', function(e) {
+			mode = e.detail.mode
+			id = e.detail.id
+			layout.posterId = id
+			
+			if (mode == 'edit') {
+				layout.posterMode = 'edit'
+				post = this.querySelector('#card'+(id))
+				layout.editorTitle = "Edit Post";
+				layout.editTitleValue = post.card.title;
+				layout.editSrcValue = post.card.img;
+				layout.editContentValue = post.card.text;
+				layout.$.editdialog.open();
+			} else if (mode == 'del') {
+				layout.posterMode = 'del'
+				layout.$.poster.post();
+				layout.$.service.update();
+			}
+		});
       },
 	  fab: function () {
-		this.editorTitle = "Create New Project"
+		this.editorTitle = "Create New Post";
 		this.$.editdialog.open();
+		this.posterMode = "new";
 	  },
+	  checkTitleValid: function () {this.$.postTitle.invalid = (this.editTitleValue == "");},
+	  checkPostValid: function () {this.$.postBody.invalid = (this.editContentValue == "");},
 	  editAccept: function () {
+		this.posterTitle = this.editTitleValue;
+		this.posterImg = this.editSrcValue;
+		this.posterText = this.editContentValue;
 		
+		this.checkTitleValid();
+		this.checkPostValid();
+		if (!this.$.postTitle.invalid && !this.$.postBody.invalid) {
+			console.log(this.editTitleValue);
+			this.$.editdialog.close();
+			this.$.poster.post();
+			this.$.service.update();
+		}
 	  },
 	  clearEdit: function () { // Call this when dialog is canceled
+		this.$.postTitle.invalid = false;
+		this.$.postBody.invalid = false;
 		this.editTitleValue = "";
 		this.editSrcValue = "";
 		this.editContentValue = "";

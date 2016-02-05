@@ -3,6 +3,7 @@
 	$mysqli = new mysqli("localhost", $auth["username"], $auth["password"], "programming_club");
 	if ($mysqli->connect_errno) {
 		echo "Failed to connect to database";
+		die();
 	}
 	if 	(!isset($_GET["type"])) {
 		$type = "projects";
