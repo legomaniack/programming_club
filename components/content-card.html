@@ -53,7 +53,7 @@
 			<div class="media" hidden$="{{_computeHidden(img)}}" style$="{{_computeStyle(img)}}">
 			</div>
 			<content select="p"></content>
-			<div class="actions layout horizontal end-justified" hidden$="{{_computeActions(type)}}">
+			<div class="actions layout horizontal end-justified" hidden="{{disableEdit}}">
 				<paper-icon-button on-tap="onDelete" icon="clear"></paper-icon-button>
 				<paper-icon-button on-tap="onEdit" icon="create"></paper-icon-button>
 			</div>
@@ -79,6 +79,11 @@
 		  type: String,
 		  value: 'projects',
 		  notify: true
+		},
+		disableEdit: {
+			type: Boolean,
+			value: false,
+			notify: true
 		}
       },
 	  onEdit: function () {
@@ -93,10 +98,7 @@
       },
       _computeStyle: function (img) {
         return 'background-image:url(' + img + ')';
-      },
-	  _computeActions: function (type) {
-		return (type == 'blog');
-	  }
+      }
     });
 </script>
 </dom-module>

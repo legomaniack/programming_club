@@ -51,7 +51,7 @@
 		<template is="dom-repeat" items="{{cols}}" as="col">
 			<div class="layout vertical flex column">
 			<template is="dom-repeat" items="{{col}}" as="card">
-				<content-card type="{{type}}" img="{{card.img}}" post-id="{{card.id}}" id="card{{card.id}}" card="{{card}}">
+				<content-card type="{{type}}" img="{{card.img}}" post-id="{{card.id}}" id="card{{card.id}}" card="{{card}}" disable-edit="{{disableEdit}}">
 					<h2>{{card.title}}</h2>
 					<p>{{card.text}}</p>
 				</content-card>
@@ -60,12 +60,12 @@
 		</template>
 	</div>
 
-	<paper-fab on-tap="fab" icon="add" title="add"></paper-fab>
+	<paper-fab on-tap="fab" icon="add" title="add" hidden="{{disableAdd}}"></paper-fab>
 	<paper-dialog id="editdialog">
 		<h2>{{editorTitle}}</h2>
 		<paper-input value="{{editTitleValue::input}}" maxlength="30" error-message="Required" id="postTitle" on-keyup="checkTitleValid" label="Title"></paper-input>
 		<paper-input value="{{editSrcValue::input}}" maxlength="2048" id="imageSrc" label="Image URL"></paper-input>
-		<paper-textarea value="{{editContentValue::input}}" maxlength="240" charCounter error-message="Required" id="postBody" on-keyup="checkPostValid" label="Content"></paper-textarea>
+		<paper-textarea value="{{editContentValue::input}}" maxlength="1000" charCounter error-message="Required" id="postBody" on-keyup="checkPostValid" label="Content"></paper-textarea>
 		<div class="buttons">
 			<paper-button dialog-dismiss>Cancel</paper-button>
 			<paper-button on-tap="editAccept">Accept</paper-button>
@@ -85,6 +85,11 @@
           type: Number,
           value: 450
         },
+		maxColumns: {
+			type: Number,
+			value: 3,
+			notify: true
+		},
 		columns: {
 			type: Number,
 			value: 1
@@ -139,13 +144,26 @@
           value: 0,
           notify: true
         },
+		disableEdit: {
+			type: Boolean,
+			value: false,
+			notify: true
+		},
+		disableAdd: {
+			type: Boolean,
+			value: false,
+			notify: true
+		}
       },
       attached: function () { // DO NOT TOUCH
 		layout = this;
-        this.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+		window.setInterval(function (){
+			layout.$.service.update();
+		}, 5000);
+        this.columns = Math.min(layout.maxColumns, Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding))));
 		Polymer.dom(this).setAttribute('unresolved', '');
         window.addEventListener('resize', function () {
-          layout.columns = Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding)));
+          layout.columns = Math.min(layout.maxColumns, Math.max(1, Math.floor(layout.clientWidth / (layout.columnWidth + 2 * layout.columnPadding))));
 		});
 		this.$.editdialog.addEventListener('iron-overlay-closed', function () {
 		  layout.clearEdit();
