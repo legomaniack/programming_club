@@ -37,10 +37,16 @@
 			--paper-fab-background: #448AFF;
 			--paper-fab-keyboard-focus-background: #2979FF;
 		}
-		paper-dialog {
+		#editdialog {
 			max-width: 600px;
 			width: calc(100% - 60px);	
 			overflow-y: scroll;
+		}
+		.buttons {
+			padding-top: 24px;
+		}
+		#deletedialog {
+			max-width: 280px;
 		}
 	</style>
 
@@ -70,6 +76,13 @@
 		<div class="buttons">
 			<paper-button dialog-dismiss>Cancel</paper-button>
 			<paper-button on-tap="editAccept">Accept</paper-button>
+		</div>
+	</paper-dialog>
+	<paper-dialog id="deletedialog" modal>
+		<h2>Delete this post?</h2>
+		<div class="buttons">
+			<paper-button dialog-dismiss>Cancel</paper-button>
+			<paper-button on-tap="deleteAccept">Delete</paper-button>
 		</div>
 	</paper-dialog>
 
@@ -184,8 +197,7 @@
 				layout.$.editdialog.open();
 			} else if (mode == 'del') {
 				layout.posterMode = 'del'
-				layout.$.poster.post();
-				layout.$.service.update();
+				layout.$.deletedialog.open();
 			}
 		});
       },
@@ -209,6 +221,11 @@
 			this.$.poster.post();
 			this.$.service.update();
 		}
+	  },
+	  deleteAccept: function () {
+		this.$.deletedialog.close();
+		this.$.poster.post();
+		this.$.service.update();
 	  },
 	  clearEdit: function () { // Call this when dialog is canceled
 		this.$.postTitle.invalid = false;
