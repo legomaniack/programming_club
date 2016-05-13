@@ -39,6 +39,11 @@
           },
           notify: true
         },
+		notNull: {
+		  type: Boolean,
+		  value: true,
+		  notify: true
+		},
         type: {
           type: String,
           value: 'projects',
@@ -46,6 +51,7 @@
         }
       },
       ready: function () {
+		
         this.calculateColumns();
       },
       colNumChanged: function () {
@@ -56,6 +62,7 @@
 		//console.log(this.$.ajax.lastResponse)
         this.cards = this.$.ajax.lastResponse.slice(0);
         this.calculateColumns();
+		this.notNull = (this.cards.length != 0);
       },
       calculateColumns: function () {
 		cols = [];
@@ -73,6 +80,7 @@
 			console.log("Update");
     		ajax.generateRequest();
 		}, 200);
+		this.notNull = (this.cards.length != 0);
 	  },
       _computeUrl: function (type) {
         return './php/getData.php?type=' + type;
