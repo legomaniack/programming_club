@@ -28,6 +28,14 @@
 			color: black;
 			padding: 0;
 		}
+		#git {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+		}
+		iron-icon {
+			margin-right: 5px;
+		}
 		.iron-selected div{
 			color: #448AFF;
 		}
@@ -45,7 +53,15 @@
 					</paper-item>
 				</a>
 			</template>
+			
 		</paper-menu>
+		<paper-menu id="git">
+			<a target="_blank" href="https://github.com/legomaniack/programming_club">
+			<paper-item role="menuitem">
+				<iron-icon src="github.png"></iron-icon> View on GitHub
+			</paper-item></a>
+		</paper-menu>
+		
 	</paper-header-panel>
 
 </template>
